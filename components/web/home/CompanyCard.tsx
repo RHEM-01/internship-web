@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { HugeiconsIcon } from '@hugeicons/react';
 import { Location01Icon, CheckmarkBadge01Icon, ArrowRight02Icon, BadgeMinusIcon } from '@hugeicons/core-free-icons';
@@ -5,6 +7,7 @@ import Link from "next/link";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import posthog from "posthog-js";
 
 interface CompanyCardProps {
   name: string;
@@ -26,7 +29,16 @@ export default function CompanyCard({
   link
 }: CompanyCardProps) {
   return (
-    <Link href={link}>
+    <Link
+      href={link}
+      onClick={() =>
+        posthog.capture("company_listing_opened", {
+          company_name: name,
+          is_verified: isVerified,
+          open_roles_count: openRolesCount,
+        })
+      }
+    >
       <Card>
         <CardContent className="px-6">
           <div className="flex justify-between items-start">
