@@ -5,8 +5,6 @@ import { FilterHorizontalIcon, Search02Icon } from '@hugeicons/core-free-icons';
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { cn } from "@/lib/utils";
-import { SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
-import { Show } from "@clerk/nextjs";
 
 export default function NavBar({
   className,
@@ -43,31 +41,6 @@ export default function NavBar({
           <HugeiconsIcon icon={FilterHorizontalIcon} className="w-5 h-5" />
         </Button>
       </div>
-
-      {/* Auth Controls */}
-      {/* <div className="flex items-center gap-3 ml-4">
-        <Show when="signed-out">
-          <SignInButton mode="modal">
-            <Button variant="ghost" size="sm">
-              Sign in
-            </Button>
-          </SignInButton>
-          <SignUpButton mode="modal">
-            <Button variant="default" size="sm">
-              Sign up
-            </Button>
-          </SignUpButton>
-        </Show>
-        <Show when="signed-in">
-          <UserButton
-            appearance={{
-              elements: {
-                avatarBox: "h-9 w-9",
-              },
-            }}
-          />
-        </Show>
-      </div> */}
     </header>
   );
 }
