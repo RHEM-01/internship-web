@@ -1,6 +1,6 @@
-import CompanyCard from "@/components/web/CompanyCard";
 import NavBar from "@/components/web/NavBar";
 import { Card, CardContent } from "@/components/ui/card";
+import CompanyCard from "@/components/web/home/CompanyCard";
 
 export default function Home() {
   return (
