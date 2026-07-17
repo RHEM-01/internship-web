@@ -37,6 +37,14 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import {
+  Combobox,
+  ComboboxInput,
+  ComboboxContent,
+  ComboboxList,
+  ComboboxItem,
+  ComboboxEmpty,
+} from "@/components/ui/combobox";
 import Link from "next/link";
 import { Country, State, City } from "country-state-city";
 import { cn } from "@/lib/utils";
@@ -108,9 +116,13 @@ export default function SuggestionPage() {
       });
       form.reset();
     } catch (error: any) {
-      if (error?.data === "ALREADY_SUGGESTED" || error?.message?.includes("ALREADY_SUGGESTED")) {
+      if (
+        error?.data === "ALREADY_SUGGESTED" ||
+        error?.message?.includes("ALREADY_SUGGESTED")
+      ) {
         toast.info("Company already suggested or listed", {
-          description: "This company is already in our directory or has been recently suggested.",
+          description:
+            "This company is already in our directory or has been recently suggested.",
         });
       } else {
         posthog.capture("company_suggestion_submission_failed");
@@ -124,11 +136,11 @@ export default function SuggestionPage() {
   }
 
   return (
-    <div className="container mx-auto px-6 py-16 md:py-24">
-      <Button 
-        variant="ghost" 
+    <div className="container mx-auto md:px-6 py-16 pt-8 md:pt-16 md:py-24">
+      <Button
+        variant="ghost"
         size="lg"
-        onClick={() => router.back()} 
+        onClick={() => router.back()}
         className="mb-8 text-muted-foreground hover:text-foreground -ml-4"
       >
         <HugeiconsIcon icon={ArrowLeft01Icon} className="mr-2 size-4" />
@@ -195,7 +207,7 @@ export default function SuggestionPage() {
         </div>
 
         {/* Right Column - Form */}
-        <div className="flex flex-col items-center w-full lg:sticky lg:top-24">
+        <div className="flex flex-col items-center w-full">
           <Card className="w-full shadow-[0_8px_30px_rgb(0,0,0,0.04)] p-8 rounded-3xl">
             <form
               onSubmit={form.handleSubmit(onSubmit)}
@@ -260,59 +272,40 @@ export default function SuggestionPage() {
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <Popover>
-                        <PopoverTrigger
-                          render={
-                            <Button
-                              type="button"
-                              variant="outline"
-                              role="combobox"
-                              className={cn(
-                                "w-full justify-between bg-transparent font-normal h-12 rounded-xl",
-                                !field.value && "text-muted-foreground",
-                                fieldState.invalid &&
-                                  "border-destructive focus-visible:ring-destructive",
-                              )}
-                            />
-                          }
-                        >
-                          {field.value || "Select country"}
-                          <HugeiconsIcon
-                            icon={ArrowDown01Icon}
-                            className="ml-2 size-4 shrink-0 opacity-50"
-                          />
-                        </PopoverTrigger>
-                        <PopoverContent
-                          className="w-(--radix-popover-trigger-width) p-0"
-                          align="start"
-                        >
-                          <Command>
-                            <CommandInput placeholder="Search country..." />
-                            <CommandList>
-                              <CommandEmpty>No country found.</CommandEmpty>
-                              <CommandGroup>
-                                {countries.map((c) => (
-                                  <CommandItem
-                                    key={c.isoCode}
-                                    value={c.name}
-                                    data-checked={c.name === field.value}
-                                    onSelect={() => {
-                                      field.onChange(c.name);
-                                      form.setValue("location.state", "");
-                                      form.setValue(
-                                        "location.localGovernment",
-                                        "",
-                                      );
-                                    }}
-                                  >
-                                    {c.name}
-                                  </CommandItem>
-                                ))}
-                              </CommandGroup>
-                            </CommandList>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
+                      <Combobox
+                        value={field.value}
+                        onValueChange={(val) => {
+                          field.onChange(val || "");
+                          form.setValue("location.state", "");
+                          form.setValue("location.localGovernment", "");
+                        }}
+                        items={countries}
+                      >
+                        <ComboboxInput
+                          ref={field.ref}
+                          name={field.name}
+                          onBlur={field.onBlur}
+                          aria-invalid={fieldState.invalid}
+                          aria-label="Country"
+                          placeholder="Select country..."
+                          className={cn(
+                            "w-full h-12 rounded-xl bg-transparent font-normal",
+                            !field.value && "text-muted-foreground",
+                            fieldState.invalid &&
+                              "border-destructive focus-within:ring-destructive",
+                          )}
+                        />
+                        <ComboboxContent>
+                          <ComboboxEmpty>No country found.</ComboboxEmpty>
+                          <ComboboxList>
+                            {country => (
+                              <ComboboxItem key={country.isoCode} value={country.name}>
+                                {country.name}
+                              </ComboboxItem>
+                            )}
+                          </ComboboxList>
+                        </ComboboxContent>
+                      </Combobox>
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
                       )}
@@ -326,59 +319,40 @@ export default function SuggestionPage() {
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <Popover>
-                        <PopoverTrigger
-                          render={
-                            <Button
-                              type="button"
-                              variant="outline"
-                              role="combobox"
-                              disabled={!countryCode}
-                              className={cn(
-                                "w-full justify-between bg-transparent font-normal h-12 rounded-xl",
-                                !field.value && "text-muted-foreground",
-                                fieldState.invalid &&
-                                  "border-destructive focus-visible:ring-destructive",
-                              )}
-                            />
-                          }
-                        >
-                          {field.value || "Select state"}
-                          <HugeiconsIcon
-                            icon={ArrowDown01Icon}
-                            className="ml-2 size-4 shrink-0 opacity-50"
-                          />
-                        </PopoverTrigger>
-                        <PopoverContent
-                          className="w-(--radix-popover-trigger-width) p-0"
-                          align="start"
-                        >
-                          <Command>
-                            <CommandInput placeholder="Search state..." />
-                            <CommandList>
-                              <CommandEmpty>No state found.</CommandEmpty>
-                              <CommandGroup>
-                                {states.map((s) => (
-                                  <CommandItem
-                                    key={s.isoCode}
-                                    value={s.name}
-                                    data-checked={s.name === field.value}
-                                    onSelect={() => {
-                                      field.onChange(s.name);
-                                      form.setValue(
-                                        "location.localGovernment",
-                                        "",
-                                      );
-                                    }}
-                                  >
-                                    {s.name}
-                                  </CommandItem>
-                                ))}
-                              </CommandGroup>
-                            </CommandList>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
+                      <Combobox
+                        value={field.value}
+                        onValueChange={(val) => {
+                          field.onChange(val || "");
+                          form.setValue("location.localGovernment", "");
+                        }}
+                        items={states}
+                      >
+                        <ComboboxInput
+                          ref={field.ref}
+                          name={field.name}
+                          onBlur={field.onBlur}
+                          aria-invalid={fieldState.invalid}
+                          aria-label="State"
+                          placeholder="Select state..."
+                          disabled={!countryCode}
+                          className={cn(
+                            "w-full h-12 rounded-xl bg-transparent font-normal",
+                            !field.value && "text-muted-foreground",
+                            fieldState.invalid &&
+                              "border-destructive focus-within:ring-destructive",
+                          )}
+                        />
+                        <ComboboxContent>
+                          <ComboboxEmpty>No state found.</ComboboxEmpty>
+                          <ComboboxList>
+                            {state => (
+                              <ComboboxItem key={state.isoCode} value={state.name}>
+                                {state.name}
+                              </ComboboxItem>
+                            )}
+                          </ComboboxList>
+                        </ComboboxContent>
+                      </Combobox>
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
                       )}
@@ -392,55 +366,37 @@ export default function SuggestionPage() {
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <Popover>
-                        <PopoverTrigger
-                          render={
-                            <Button
-                              type="button"
-                              variant="outline"
-                              role="combobox"
-                              disabled={!stateCode}
-                              className={cn(
-                                "w-full justify-between bg-transparent font-normal h-12 rounded-xl",
-                                !field.value && "text-muted-foreground",
-                                fieldState.invalid &&
-                                  "border-destructive focus-visible:ring-destructive",
-                              )}
-                            />
-                          }
-                        >
-                          {field.value || "Select city"}
-                          <HugeiconsIcon
-                            icon={ArrowDown01Icon}
-                            className="ml-2 size-4 shrink-0 opacity-50"
-                          />
-                        </PopoverTrigger>
-                        <PopoverContent
-                          className="w-(--radix-popover-trigger-width) p-0"
-                          align="start"
-                        >
-                          <Command>
-                            <CommandInput placeholder="Search city..." />
-                            <CommandList>
-                              <CommandEmpty>No city found.</CommandEmpty>
-                              <CommandGroup>
-                                {cities.map((c) => (
-                                  <CommandItem
-                                    key={c.name}
-                                    value={c.name}
-                                    data-checked={c.name === field.value}
-                                    onSelect={() => {
-                                      field.onChange(c.name);
-                                    }}
-                                  >
-                                    {c.name}
-                                  </CommandItem>
-                                ))}
-                              </CommandGroup>
-                            </CommandList>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
+                      <Combobox
+                        value={field.value}
+                        onValueChange={(val) => field.onChange(val || "")}
+                        items={cities}
+                      >
+                        <ComboboxInput
+                          ref={field.ref}
+                          name={field.name}
+                          onBlur={field.onBlur}
+                          aria-invalid={fieldState.invalid}
+                          aria-label="City"
+                          placeholder="Select city..."
+                          disabled={!stateCode}
+                          className={cn(
+                            "w-full h-12 rounded-xl bg-transparent font-normal",
+                            !field.value && "text-muted-foreground",
+                            fieldState.invalid &&
+                              "border-destructive focus-within:ring-destructive",
+                          )}
+                        />
+                        <ComboboxContent>
+                          <ComboboxEmpty>No city found.</ComboboxEmpty>
+                          <ComboboxList>
+                            {city => (
+                              <ComboboxItem key={city.name} value={city.name}>
+                                {city.name}
+                              </ComboboxItem>
+                            )}
+                          </ComboboxList>
+                        </ComboboxContent>
+                      </Combobox>
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
                       )}
@@ -470,62 +426,42 @@ export default function SuggestionPage() {
                           Required
                         </span>
                       </div>
-                      <Popover>
-                        <PopoverTrigger
-                          render={
-                            <Button
-                              type="button"
-                              variant="outline"
-                              role="combobox"
-                              className={cn(
-                                "w-full justify-between bg-transparent font-normal h-12 rounded-xl",
-                                !field.value && "text-muted-foreground",
-                                fieldState.invalid &&
-                                  "border-destructive focus-visible:ring-destructive",
-                              )}
-                            />
-                          }
-                        >
-                          <div className="flex items-center gap-2">
-                            <HugeiconsIcon
-                              icon={ShapesIcon}
-                              className="size-5 text-muted-foreground/70"
-                            />
-                            {selectedIndustry
-                              ? selectedIndustry.name
-                              : "Select an industry"}
-                          </div>
+                      <Combobox
+                        value={field.value}
+                        onValueChange={(val) => field.onChange(val || "")}
+                        items={industries || []}
+                      >
+                        <div className="relative w-full">
                           <HugeiconsIcon
-                            icon={ArrowDown01Icon}
-                            className="ml-2 size-4 shrink-0 opacity-50"
+                            icon={ShapesIcon}
+                            className="absolute left-3 top-1/2 -translate-y-1/2 z-10 size-5 text-muted-foreground/70 pointer-events-none"
                           />
-                        </PopoverTrigger>
-                        <PopoverContent
-                          className="w-(--radix-popover-trigger-width) p-0"
-                          align="start"
-                        >
-                          <Command>
-                            <CommandInput placeholder="Search industry..." />
-                            <CommandList>
-                              <CommandEmpty>No industry found.</CommandEmpty>
-                              <CommandGroup>
-                                {industries?.map((ind) => (
-                                  <CommandItem
-                                    key={ind._id}
-                                    value={ind.name}
-                                    data-checked={ind._id === field.value}
-                                    onSelect={() => {
-                                      field.onChange(ind._id);
-                                    }}
-                                  >
-                                    {ind.name}
-                                  </CommandItem>
-                                ))}
-                              </CommandGroup>
-                            </CommandList>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
+                          <ComboboxInput
+                            ref={field.ref}
+                            name={field.name}
+                            onBlur={field.onBlur}
+                            aria-invalid={fieldState.invalid}
+                            id={field.name}
+                            placeholder="Select an industry..."
+                            className={cn(
+                              "w-full h-12 rounded-xl bg-transparent font-normal pl-10",
+                              !field.value && "text-muted-foreground",
+                              fieldState.invalid &&
+                                "border-destructive focus-within:ring-destructive",
+                            )}
+                          />
+                        </div>
+                        <ComboboxContent>
+                          <ComboboxEmpty>No industry found.</ComboboxEmpty>
+                          <ComboboxList>
+                            {ind => (
+                              <ComboboxItem key={ind._id} value={ind._id}>
+                                {ind.name}
+                              </ComboboxItem>
+                            )}
+                          </ComboboxList>
+                        </ComboboxContent>
+                      </Combobox>
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
                       )}

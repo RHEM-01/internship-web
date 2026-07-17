@@ -3,9 +3,24 @@
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import CompanyCard from "./CompanyCard";
+import { useSearchParams } from "next/navigation";
 
 export default function CompanyList() {
-  const companies = useQuery(api.company.getAll);
+  const searchParams = useSearchParams();
+  
+  const state = searchParams.get("state") || undefined;
+  const localGovernment = searchParams.get("city") || undefined;
+  const industryId = searchParams.get("industryId") || undefined;
+  const departmentId = searchParams.get("departmentId") || undefined;
+  const searchTerm = searchParams.get("q") || undefined;
+
+  const companies = useQuery(api.company.search, {
+    state,
+    localGovernment,
+    industryId,
+    departmentId,
+    searchTerm,
+  });
 
   if (companies === undefined) {
     return (
@@ -18,7 +33,7 @@ export default function CompanyList() {
   if (companies.length === 0) {
     return (
       <div className="w-full flex justify-center p-10">
-        <p className="text-muted-foreground">No companies found. Be the first to suggest one!</p>
+        <p className="text-muted-foreground">No companies found matching your criteria.</p>
       </div>
     );
   }
