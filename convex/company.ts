@@ -1,10 +1,36 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
+import { posthog } from "./posthog";
 
 export const getAll = query({
   args: {},
   handler: async (ctx) => {
-    return await ctx.db.query("companies").collect();
+    const companies = await ctx.db.query("companies").collect();
+    return companies.map((company) => ({
+      ...company,
+      openRolesCount: company.openRolesCount || 0,
+    }));
+  },
+});
+
+export const getById = query({
+  args: { id: v.string() },
+  handler: async (ctx, args) => {
+    const normalizedId = ctx.db.normalizeId("companies", args.id);
+    if (!normalizedId) return null;
+
+    const company = await ctx.db.get(normalizedId);
+    if (!company) return null;
+    
+    const positions = await ctx.db
+      .query("positions")
+      .withIndex("by_companyId", (q) => q.eq("companyId", company._id))
+      .collect();
+      
+    return {
+      ...company,
+      positions,
+    };
   },
 });
 
@@ -13,7 +39,7 @@ export const createCompanyWithPositions = mutation({
     logoUrl: v.optional(v.string()),
     name: v.string(),
     industryId: v.id("industries"),
-    websiteUrl: v.string(),
+    websiteUrl: v.optional(v.string()),
     location: v.object({
       country: v.string(),
       state: v.string(),
@@ -44,6 +70,9 @@ export const createCompanyWithPositions = mutation({
     ),
   },
   handler: async (ctx, args) => {
+    const normalize = (s: string) => s.trim().toLowerCase().replace(/\s+/g, ' ');
+    const canonicalKey = `${normalize(args.name)}|${normalize(args.location.country)}|${normalize(args.location.state)}|${normalize(args.location.localGovernment)}`;
+
     // 1. Insert the new company
     const companyId = await ctx.db.insert("companies", {
       logoUrl: args.logoUrl,
@@ -57,6 +86,8 @@ export const createCompanyWithPositions = mutation({
       batchPeriod: args.batchPeriod,
       compensation: args.compensation,
       certifyChecked: args.certifyChecked,
+      openRolesCount: args.positions.length,
+      canonicalKey,
     });
 
     // 2. Insert all the open positions for this company
@@ -77,6 +108,17 @@ export const createCompanyWithPositions = mutation({
         requirements: position.requirements,
       });
     }
+
+    await posthog.capture(ctx, {
+      distinctId: "system_admin", // Using a static distinctId for admin/backend initiated company creation
+      event: "company_created_with_positions",
+      properties: {
+        companyId,
+        positionsCount: args.positions.length,
+        industryId: args.industryId,
+        isVerified: args.isVerified,
+      },
+    });
 
     return companyId;
   },

@@ -44,4 +44,4 @@ Company data is collected through:
 
 ---
 
-Built by [LeRhem](#) — Computer Science / Software Engineering, Federal University Wukari.
+Built by [LeRhem](https://github.com/lerhem)

@@ -1,6 +1,6 @@
 # PostHog post-wizard report
 
-PostHog is initialized in the Next.js client instrumentation entry point using environment-based configuration, a local reverse-proxy path, and exception capture. The existing company-suggestion submission tracking remains in place. This setup adds client-side tracking for internship directory listing opens and application-start intent, without sending user-entered personal data in event properties. The existing reverse-proxy rewrites were retained and the production build completed successfully on Next.js 16.
+PostHog is initialized once in the Next.js client instrumentation entry point with environment-based configuration, a local reverse-proxy path, and exception capture. The duplicate browser initialization was removed from the Convex client wrapper. Existing client events for listing opens, application intent, and suggestion submission were retained. A server-side `company_suggestion_created` event now records successful persisted suggestions with non-PII metadata. The production build and scoped lint both completed successfully.
 
 | Event name | Description | File |
 | --- | --- | --- |
@@ -8,14 +8,15 @@ PostHog is initialized in the Next.js client instrumentation entry point using e
 | `internship_application_started` | Tracks when a visitor starts an internship application from a company listing. | `components/web/company/ApplyButton.tsx` |
 | `company_suggestion_submitted` | Tracks successful company-suggestion submissions with non-PII completion metadata. | `app/(public)/suggest/page.tsx` |
 | `company_suggestion_submission_failed` | Tracks failed company-suggestion submissions. | `app/(public)/suggest/page.tsx` |
+| `company_suggestion_created` | Records a successfully persisted company suggestion from the server-side mutation. | `convex/suggestion.ts` |
 
 ## Next steps
 
 A dashboard has been created for the new instrumentation:
 
-- [Analytics basics (wizard)](https://us.posthog.com/project/515819/dashboard/1861222)
+- [Analytics basics (wizard)](https://us.posthog.com/project/515819/dashboard/1865139)
 
-The newly added custom events have not yet arrived in the project event schema, so no event-based insights were created. Trigger the flows in a deployed or local instrumented app, then create trends and a conversion funnel from the captured events.
+The new custom event has not yet arrived in the project event schema, so no event-based insights were created. Trigger the instrumented flows, then add trends and conversion insights from the captured events.
 
 ## Verify before merging
 

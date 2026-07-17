@@ -16,7 +16,7 @@ export default defineSchema({
     logoUrl: v.optional(v.string()),
     name: v.string(),
     industryId: v.id("industries"),
-    websiteUrl: v.string(),
+    websiteUrl: v.optional(v.string()),
     location: v.object({
       country: v.string(),
       state: v.string(),
@@ -29,7 +29,9 @@ export default defineSchema({
     batchPeriod: v.string(),
     compensation: v.string(),
     certifyChecked: v.boolean(),
-  }),
+    canonicalKey: v.optional(v.string()),
+    openRolesCount: v.optional(v.number()),
+  }).index("by_canonicalKey", ["canonicalKey"]),
   
   positions: defineTable({
     companyId: v.id("companies"),
@@ -45,11 +47,11 @@ export default defineSchema({
     startTime: v.string(),
     endTime: v.string(),
     requirements: v.array(v.string()),
-  }),
+  }).index("by_companyId", ["companyId"]),
 
   suggestions: defineTable({
     companyName: v.string(),
-    websiteUrl: v.string(),
+    websiteUrl: v.optional(v.string()),
     industryId: v.string(),
     location: v.object({
       country: v.string(),
@@ -58,5 +60,6 @@ export default defineSchema({
     }),
     userPhone: v.optional(v.string()),
     companyPhone: v.optional(v.string()),
-  }),
+    canonicalKey: v.optional(v.string()),
+  }).index("by_canonicalKey", ["canonicalKey"]),
 });

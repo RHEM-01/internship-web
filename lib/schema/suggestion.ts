@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const suggestionSchema = z.object({
   companyName: z.string().min(1, "Company name is required"),
-  websiteUrl: z.url("Must be a valid URL").min(1, "Website is required"),
+  websiteUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
   industryId: z.string().min(1, "Industry is required"),
   location: z.object({
     country: z.string().min(1, "Country is required"),

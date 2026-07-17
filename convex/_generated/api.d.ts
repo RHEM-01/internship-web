@@ -11,6 +11,8 @@
 import type * as company from "../company.js";
 import type * as department from "../department.js";
 import type * as industry from "../industry.js";
+import type * as posthog from "../posthog.js";
+import type * as seed from "../seed.js";
 import type * as suggestion from "../suggestion.js";
 
 import type {
@@ -23,6 +25,8 @@ declare const fullApi: ApiFromModules<{
   company: typeof company;
   department: typeof department;
   industry: typeof industry;
+  posthog: typeof posthog;
+  seed: typeof seed;
   suggestion: typeof suggestion;
 }>;
 
@@ -52,4 +56,6 @@ export declare const internal: FilterApi<
   FunctionReference<any, "internal">
 >;
 
-export declare const components: {};
+export declare const components: {
+  posthog: import("@posthog/convex/_generated/component.js").ComponentApi<"posthog">;
+};
