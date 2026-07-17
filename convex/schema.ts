@@ -29,7 +29,9 @@ export default defineSchema({
     batchPeriod: v.string(),
     compensation: v.string(),
     certifyChecked: v.boolean(),
-  }),
+    canonicalKey: v.optional(v.string()),
+    openRolesCount: v.optional(v.number()),
+  }).index("by_canonicalKey", ["canonicalKey"]),
   
   positions: defineTable({
     companyId: v.id("companies"),
@@ -58,5 +60,6 @@ export default defineSchema({
     }),
     userPhone: v.optional(v.string()),
     companyPhone: v.optional(v.string()),
-  }),
+    canonicalKey: v.optional(v.string()),
+  }).index("by_canonicalKey", ["canonicalKey"]),
 });

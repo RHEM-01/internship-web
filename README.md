@@ -44,4 +44,4 @@ Company data is collected through:
 
 ---
 
-Built by [LeRhem](#)
+Built by [LeRhem](https://github.com/lerhem)

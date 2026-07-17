@@ -2,7 +2,6 @@
 
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -28,7 +27,7 @@ interface CompanyDetailsClientProps {
 }
 
 export default function CompanyDetailsClient({ companyId }: CompanyDetailsClientProps) {
-    const company = useQuery(api.company.getById, { id: companyId as Id<"companies"> });
+    const company = useQuery(api.company.getById, { id: companyId });
 
     if (company === undefined) {
         return (
@@ -53,8 +52,6 @@ export default function CompanyDetailsClient({ companyId }: CompanyDetailsClient
         );
     }
 
-    const firstPosition = company.positions?.[0];
-
     return (
         <div className="w-full pb-10">
             <NavBar className="mt-2" />
@@ -67,10 +64,17 @@ export default function CompanyDetailsClient({ companyId }: CompanyDetailsClient
                         Back
                     </Link>
                     <div className="flex gap-2">
-                        <Button variant="outline" size="lg">
-                            <HugeiconsIcon icon={Share08Icon} />
-                            Share
-                        </Button>
+                        {typeof navigator !== "undefined" && navigator.share && (
+                            <Button variant="outline" size="lg" onClick={() => {
+                                navigator.share({
+                                    title: company.name,
+                                    url: window.location.href,
+                                }).catch(console.error);
+                            }}>
+                                <HugeiconsIcon icon={Share08Icon} />
+                                Share
+                            </Button>
+                        )}
                     </div>
                 </div>
 
@@ -95,11 +99,15 @@ export default function CompanyDetailsClient({ companyId }: CompanyDetailsClient
                                         <Badge className="bg-primary/10 text-primary border-0">
                                             {company.isVerified ? "Verified" : "Unverified"}
                                         </Badge>
-                                        {firstPosition && (
-                                            <Badge className="bg-primary/10 text-primary border-0">{firstPosition.employmentType || "Internship"}</Badge>
+                                        {company.positions?.[0] && (
+                                            <Badge className="bg-primary/10 text-primary border-0">{company.positions[0].employmentType || "Internship"}</Badge>
                                         )}
                                     </div>
-                                    <h1 className="text-2xl font-bold font-heading">{firstPosition?.title || "Internship Program"}</h1>
+                                    <h1 className="text-2xl font-bold font-heading">
+                                        {company.positions && company.positions.length > 0 
+                                            ? company.positions.map(p => p.title).join(", ") 
+                                            : "Internship Program"}
+                                    </h1>
                                     <div className="flex items-center gap-4 text-muted-foreground text-sm flex-wrap">
                                         <div className="flex items-center gap-1.5">
                                             <HugeiconsIcon icon={Building02Icon} className="size-4" />
@@ -128,87 +136,148 @@ export default function CompanyDetailsClient({ companyId }: CompanyDetailsClient
                         </Card>
 
                         {/* Requirements */}
-                        {firstPosition && firstPosition.requirements && firstPosition.requirements.length > 0 && (
-                            <Card>
-                                <CardContent className="p-6">
-                                    <div className="flex items-center gap-2.5 mb-5">
-                                        <HugeiconsIcon icon={CheckmarkCircle02Icon} className="size-5 text-primary" />
-                                        <h2 className="text-lg font-bold font-heading">Requirements</h2>
-                                    </div>
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                        {firstPosition.requirements.map((req, idx) => (
-                                            <div key={idx} className="rounded-xl border p-4 space-y-1.5">
-                                                <div className="flex items-start gap-2">
-                                                    <HugeiconsIcon icon={CheckmarkCircle02Icon} className="size-4 text-primary mt-0.5 shrink-0" />
-                                                    <p className="text-sm text-muted-foreground leading-relaxed">
-                                                        {req}
-                                                    </p>
-                                                </div>
+                        {company.positions && company.positions.length > 0 && company.positions.some(p => p.requirements && p.requirements.length > 0) && (
+                            <div className="flex flex-col gap-6">
+                                {company.positions.map((pos, idx) => pos.requirements && pos.requirements.length > 0 && (
+                                    <Card key={idx}>
+                                        <CardContent className="p-6">
+                                            <div className="flex items-center gap-2.5 mb-5">
+                                                <HugeiconsIcon icon={CheckmarkCircle02Icon} className="size-5 text-primary" />
+                                                <h2 className="text-lg font-bold font-heading">Requirements {company.positions!.length > 1 ? `- ${pos.title}` : ''}</h2>
                                             </div>
-                                        ))}
-                                    </div>
-                                </CardContent>
-                            </Card>
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                {pos.requirements.map((req, reqIdx) => (
+                                                    <div key={reqIdx} className="rounded-xl border p-4 space-y-1.5">
+                                                        <div className="flex items-start gap-2">
+                                                            <HugeiconsIcon icon={CheckmarkCircle02Icon} className="size-4 text-primary mt-0.5 shrink-0" />
+                                                            <p className="text-sm text-muted-foreground leading-relaxed">
+                                                                {req}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                ))}
+                            </div>
                         )}
                     </div>
 
                     {/* Right Column - Sidebar */}
                     <div className="col-span-1 md:col-span-4 flex flex-col gap-6">
                         {/* Position Details */}
-                        <Card>
-                            <CardContent className="space-y-5 p-6">
-                                <h3 className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
-                                    Position Details
-                                </h3>
+                        {/* Position Details */}
+                        {company.positions && company.positions.length > 0 ? (
+                            <div className="flex flex-col gap-6">
+                                {company.positions.map((pos, idx) => (
+                                    <Card key={idx}>
+                                        <CardContent className="space-y-5 p-6">
+                                            <h3 className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
+                                                {company.positions!.length > 1 ? pos.title : "Position Details"}
+                                            </h3>
 
-                                <div className="space-y-4">
-                                    <div className="flex items-start gap-3">
-                                        <div className="rounded-lg bg-primary/10 p-2">
-                                            <HugeiconsIcon icon={Clock01Icon} className="size-5 text-primary" />
+                                            <div className="space-y-4">
+                                                <div className="flex items-start gap-3">
+                                                    <div className="rounded-lg bg-primary/10 p-2">
+                                                        <HugeiconsIcon icon={Clock01Icon} className="size-5 text-primary" />
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-xs text-muted-foreground">Duration</p>
+                                                        <p className="font-semibold text-sm">
+                                                            {pos.durationValue && pos.durationUnit 
+                                                                ? `${pos.durationValue} ${pos.durationUnit}` 
+                                                                : company.duration || "Not specified"}
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                <Separator />
+
+                                                <div className="flex items-start gap-3">
+                                                    <div className="rounded-lg bg-primary/10 p-2">
+                                                        <HugeiconsIcon icon={Coins01Icon} className="size-5 text-primary" />
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-xs text-muted-foreground">Stipend / Compensation</p>
+                                                        <p className="font-semibold text-sm">
+                                                            {pos.stipend !== undefined && pos.stipend !== null
+                                                                ? `${pos.currency || ''}${pos.stipend} / month` 
+                                                                : company.compensation || "Not specified"}
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                <Separator />
+
+                                                <div className="flex items-start gap-3">
+                                                    <div className="rounded-lg bg-primary/10 p-2">
+                                                        <HugeiconsIcon icon={Briefcase01Icon} className="size-5 text-primary" />
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-xs text-muted-foreground">Experience Level</p>
+                                                        <p className="font-semibold text-sm">{pos.employmentType || "Entry Level / Internship"}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <ApplyButton companyId={company._id} />
+                                        </CardContent>
+                                    </Card>
+                                ))}
+                            </div>
+                        ) : (
+                            <Card>
+                                <CardContent className="space-y-5 p-6">
+                                    <h3 className="text-xs font-bold tracking-widest text-muted-foreground uppercase">
+                                        Position Details
+                                    </h3>
+
+                                    <div className="space-y-4">
+                                        <div className="flex items-start gap-3">
+                                            <div className="rounded-lg bg-primary/10 p-2">
+                                                <HugeiconsIcon icon={Clock01Icon} className="size-5 text-primary" />
+                                            </div>
+                                            <div>
+                                                <p className="text-xs text-muted-foreground">Duration</p>
+                                                <p className="font-semibold text-sm">
+                                                    {company.duration || "Not specified"}
+                                                </p>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <p className="text-xs text-muted-foreground">Duration</p>
-                                            <p className="font-semibold text-sm">
-                                                {firstPosition?.durationValue && firstPosition?.durationUnit 
-                                                    ? `${firstPosition.durationValue} ${firstPosition.durationUnit}` 
-                                                    : company.duration || "Not specified"}
-                                            </p>
+
+                                        <Separator />
+
+                                        <div className="flex items-start gap-3">
+                                            <div className="rounded-lg bg-primary/10 p-2">
+                                                <HugeiconsIcon icon={Coins01Icon} className="size-5 text-primary" />
+                                            </div>
+                                            <div>
+                                                <p className="text-xs text-muted-foreground">Stipend / Compensation</p>
+                                                <p className="font-semibold text-sm">
+                                                    {company.compensation || "Not specified"}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <Separator />
+
+                                        <div className="flex items-start gap-3">
+                                            <div className="rounded-lg bg-primary/10 p-2">
+                                                <HugeiconsIcon icon={Briefcase01Icon} className="size-5 text-primary" />
+                                            </div>
+                                            <div>
+                                                <p className="text-xs text-muted-foreground">Experience Level</p>
+                                                <p className="font-semibold text-sm">Entry Level / Internship</p>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <Separator />
+                                    <ApplyButton companyId={company._id} />
 
-                                    <div className="flex items-start gap-3">
-                                        <div className="rounded-lg bg-primary/10 p-2">
-                                            <HugeiconsIcon icon={Coins01Icon} className="size-5 text-primary" />
-                                        </div>
-                                        <div>
-                                            <p className="text-xs text-muted-foreground">Stipend / Compensation</p>
-                                            <p className="font-semibold text-sm">
-                                                {firstPosition?.stipend 
-                                                    ? `${firstPosition.currency || ''}${firstPosition.stipend} / month` 
-                                                    : company.compensation || "Not specified"}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    <Separator />
-
-                                    <div className="flex items-start gap-3">
-                                        <div className="rounded-lg bg-primary/10 p-2">
-                                            <HugeiconsIcon icon={Briefcase01Icon} className="size-5 text-primary" />
-                                        </div>
-                                        <div>
-                                            <p className="text-xs text-muted-foreground">Experience Level</p>
-                                            <p className="font-semibold text-sm">Entry Level / Internship</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <ApplyButton companyId={company._id} />
-
-                            </CardContent>
-                        </Card>
+                                </CardContent>
+                            </Card>
+                        )}
 
                         {/* Life at Company */}
                         <Card className="bg-primary text-primary-foreground ring-0">

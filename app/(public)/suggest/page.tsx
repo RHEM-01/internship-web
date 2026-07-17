@@ -109,8 +109,8 @@ export default function SuggestionPage() {
       form.reset();
     } catch (error: any) {
       if (error?.data === "ALREADY_SUGGESTED" || error?.message?.includes("ALREADY_SUGGESTED")) {
-        toast.info("Company already suggested", {
-          description: "This company has already been suggested and is being verified.",
+        toast.info("Company already suggested or listed", {
+          description: "This company is already in our directory or has been recently suggested.",
         });
       } else {
         posthog.capture("company_suggestion_submission_failed");

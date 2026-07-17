@@ -34,7 +34,7 @@ export default function CompanyList() {
           openRolesCount={company.openRolesCount}
           rolesLabel={company.openRolesCount === 1 ? "Internship" : "Internships"}
           isVerified={company.isVerified}
-          link={`/company/${company._id}`}
+          link={`/${company._id}`}
         />
       ))}
     </div>

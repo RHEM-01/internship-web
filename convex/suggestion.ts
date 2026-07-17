@@ -23,28 +23,18 @@ export const create = mutation({
     companyPhone: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    // Check if company already suggested or verified in the same location
-    const suggestionsWithSameName = await ctx.db
+    const normalize = (s: string) => s.trim().toLowerCase().replace(/\s+/g, ' ');
+    const canonicalKey = `${normalize(args.companyName)}|${normalize(args.location.country)}|${normalize(args.location.state)}|${normalize(args.location.localGovernment)}`;
+
+    const existingSuggestion = await ctx.db
       .query("suggestions")
-      .filter((q) => q.eq(q.field("companyName"), args.companyName))
-      .collect();
+      .withIndex("by_canonicalKey", (q) => q.eq("canonicalKey", canonicalKey))
+      .first();
 
-    const existingSuggestion = suggestionsWithSameName.find(
-      (s) =>
-        s.location.state === args.location.state &&
-        s.location.localGovernment === args.location.localGovernment
-    );
-
-    const companiesWithSameName = await ctx.db
+    const existingCompany = await ctx.db
       .query("companies")
-      .filter((q) => q.eq(q.field("name"), args.companyName))
-      .collect();
-
-    const existingCompany = companiesWithSameName.find(
-      (c) =>
-        c.location.state === args.location.state &&
-        c.location.localGovernment === args.location.localGovernment
-    );
+      .withIndex("by_canonicalKey", (q) => q.eq("canonicalKey", canonicalKey))
+      .first();
 
     if (existingSuggestion || existingCompany) {
       throw new ConvexError("ALREADY_SUGGESTED");
@@ -57,10 +47,11 @@ export const create = mutation({
       location: args.location,
       userPhone: args.userPhone,
       companyPhone: args.companyPhone,
+      canonicalKey,
     });
 
     await posthog.capture(ctx, {
-      distinctId: args.userPhone || "anonymous",
+      distinctId: suggestionId,
       event: "company_suggestion_created",
       properties: {
         has_website_url: Boolean(args.websiteUrl),

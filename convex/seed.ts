@@ -21,17 +21,19 @@ const INDUSTRIES = [
 
 export const seedIndustries = mutation({
   handler: async (ctx) => {
-    // Check if industries already exist
+    // Check existing industries
     const existing = await ctx.db.query("industries").collect();
-    if (existing.length > 0) {
-      return "Industries already seeded!";
-    }
+    const existingValues = new Set(existing.map((ind) => ind.value));
 
-    // Insert all industries
+    let seededCount = 0;
+    // Insert missing industries
     for (const industry of INDUSTRIES) {
-      await ctx.db.insert("industries", industry);
+      if (!existingValues.has(industry.value)) {
+        await ctx.db.insert("industries", industry);
+        seededCount++;
+      }
     }
     
-    return `Seeded ${INDUSTRIES.length} industries successfully!`;
+    return `Seeded ${seededCount} missing industries successfully!`;
   },
 });
