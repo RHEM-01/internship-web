@@ -45,7 +45,7 @@ export const createCompanyWithPositions = mutation({
     logoUrl: v.optional(v.string()),
     name: v.string(),
     industryId: v.id("industries"),
-    websiteUrl: v.string(),
+    websiteUrl: v.optional(v.string()),
     location: v.object({
       country: v.string(),
       state: v.string(),

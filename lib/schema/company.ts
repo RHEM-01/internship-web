@@ -5,7 +5,7 @@ export const companySchema = z.object({
   logoUrl: z.string().optional(),
   name: z.string().min(1, "Company name is required"),
   industryId: z.string().min(1, "Industry is required"),
-  websiteUrl: z.url("Must be a valid URL").min(1, "Website is required"),
+  websiteUrl: z.string().url("Must be a valid URL").or(z.literal("")).optional(),
   location: z.object({
     country: z.string().min(1, "Country is required"),
     state: z.string().min(1, "State is required"),

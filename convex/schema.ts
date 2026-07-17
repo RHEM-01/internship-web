@@ -16,7 +16,7 @@ export default defineSchema({
     logoUrl: v.optional(v.string()),
     name: v.string(),
     industryId: v.id("industries"),
-    websiteUrl: v.string(),
+    websiteUrl: v.optional(v.string()),
     location: v.object({
       country: v.string(),
       state: v.string(),
@@ -49,7 +49,7 @@ export default defineSchema({
 
   suggestions: defineTable({
     companyName: v.string(),
-    websiteUrl: v.string(),
+    websiteUrl: v.optional(v.string()),
     industryId: v.string(),
     location: v.object({
       country: v.string(),

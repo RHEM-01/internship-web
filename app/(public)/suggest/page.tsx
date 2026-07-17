@@ -47,6 +47,7 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import { toast } from "sonner";
 
 export default function SuggestionPage() {
   const router = useRouter();
@@ -102,12 +103,23 @@ export default function SuggestionPage() {
         has_user_phone: Boolean(data.userPhone?.trim()),
         has_company_phone: Boolean(data.companyPhone?.trim()),
       });
-      // Optionally show a success toast here
+      toast.success("Suggestion submitted!", {
+        description: "Thank you for helping us grow the directory.",
+      });
       form.reset();
-    } catch (error) {
-      posthog.capture("company_suggestion_submission_failed");
-      posthog.captureException(error);
-      console.error("Failed to submit suggestion", error);
+    } catch (error: any) {
+      if (error?.data === "ALREADY_SUGGESTED" || error?.message?.includes("ALREADY_SUGGESTED")) {
+        toast.info("Company already suggested", {
+          description: "This company has already been suggested and is being verified.",
+        });
+      } else {
+        posthog.capture("company_suggestion_submission_failed");
+        posthog.captureException(error);
+        console.error("Failed to submit suggestion", error);
+        toast.error("Submission failed", {
+          description: "Please try again later.",
+        });
+      }
     }
   }
 
@@ -660,13 +672,23 @@ export default function SuggestionPage() {
               <Button
                 type="submit"
                 size="lg"
-                className="w-full mt-4 h-14 text-[15px] font-medium rounded-full bg-[#1e40af] hover:bg-[#1e3a8a] text-white shadow-lg shadow-blue-500/20"
+                disabled={form.formState.isSubmitting}
+                className="w-full mt-4 h-14 text-[15px] font-medium rounded-full bg-[#1e40af] hover:bg-[#1e3a8a] text-white shadow-lg shadow-blue-500/20 disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                Submit Suggestion{" "}
-                <HugeiconsIcon
-                  icon={ArrowRight01Icon}
-                  className="ml-1 size-5"
-                />
+                {form.formState.isSubmitting ? (
+                  <>
+                    Submitting...
+                    <div className="ml-2 h-4 w-4 animate-spin rounded-full border-2 border-white/20 border-t-white" />
+                  </>
+                ) : (
+                  <>
+                    Submit Suggestion{" "}
+                    <HugeiconsIcon
+                      icon={ArrowRight01Icon}
+                      className="ml-1 size-5"
+                    />
+                  </>
+                )}
               </Button>
             </form>
           </Card>
