@@ -45,7 +45,7 @@ export default defineSchema({
     startTime: v.string(),
     endTime: v.string(),
     requirements: v.array(v.string()),
-  }),
+  }).index("by_companyId", ["companyId"]),
 
   suggestions: defineTable({
     companyName: v.string(),

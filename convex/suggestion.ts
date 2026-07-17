@@ -1,5 +1,6 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
+import { posthog } from "./posthog";
 
 export const getAll = query({
   args: {},
@@ -22,7 +23,7 @@ export const create = mutation({
     companyPhone: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    return await ctx.db.insert("suggestions", {
+    const suggestionId = await ctx.db.insert("suggestions", {
       companyName: args.companyName,
       websiteUrl: args.websiteUrl,
       industryId: args.industryId,
@@ -30,5 +31,17 @@ export const create = mutation({
       userPhone: args.userPhone,
       companyPhone: args.companyPhone,
     });
+
+    await posthog.capture(ctx, {
+      event: "company_suggestion_created",
+      properties: {
+        has_website_url: Boolean(args.websiteUrl),
+        has_user_phone: Boolean(args.userPhone?.trim()),
+        has_company_phone: Boolean(args.companyPhone?.trim()),
+        country: args.location.country,
+      },
+    });
+
+    return suggestionId;
   },
 });
