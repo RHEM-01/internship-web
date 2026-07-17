@@ -13,6 +13,64 @@ export const getAll = query({
   },
 });
 
+export const search = query({
+  args: {
+    state: v.optional(v.string()),
+    localGovernment: v.optional(v.string()),
+    industryId: v.optional(v.string()),
+    departmentId: v.optional(v.string()),
+    searchTerm: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    let companies = await ctx.db.query("companies").collect();
+
+    if (args.industryId) {
+      const indId = ctx.db.normalizeId("industries", args.industryId);
+      if (indId) {
+        companies = companies.filter(c => c.industryId === indId);
+      } else {
+        companies = [];
+      }
+    }
+
+    if (args.state) {
+      companies = companies.filter(c => c.location.state === args.state);
+    }
+
+    if (args.localGovernment) {
+      companies = companies.filter(c => c.location.localGovernment === args.localGovernment);
+    }
+
+    if (args.departmentId) {
+      const deptId = ctx.db.normalizeId("departments", args.departmentId);
+      if (deptId) {
+        const positions = await ctx.db
+          .query("positions")
+          .withIndex("by_departmentId", (q) => q.eq("departmentId", deptId))
+          .collect();
+        
+        const companyIdsWithDept = new Set(positions.map(p => p.companyId));
+        companies = companies.filter(c => companyIdsWithDept.has(c._id));
+      } else {
+        companies = [];
+      }
+    }
+
+    if (args.searchTerm) {
+      const lowerTerm = args.searchTerm.toLowerCase();
+      companies = companies.filter(c => 
+        c.name.toLowerCase().includes(lowerTerm) || 
+        c.description.toLowerCase().includes(lowerTerm)
+      );
+    }
+
+    return companies.map((company) => ({
+      ...company,
+      openRolesCount: company.openRolesCount || 0,
+    }));
+  },
+});
+
 export const getById = query({
   args: { id: v.string() },
   handler: async (ctx, args) => {

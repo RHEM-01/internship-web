@@ -23,7 +23,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "InternShip | SIWES Placement Directory",
+  title: "SIWES Hub | SIWES Placement Directory",
   description:
     "A directory platform solving the SIWES placement information gap for Nigerian university students.",
 };
