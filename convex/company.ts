@@ -58,9 +58,17 @@ export const search = query({
 
     if (args.searchTerm) {
       const lowerTerm = args.searchTerm.toLowerCase();
+      const positions = await ctx.db.query("positions").collect();
+      const matchingCompanyIds = new Set(
+        positions
+          .filter(p => p.title.toLowerCase().includes(lowerTerm))
+          .map(p => p.companyId)
+      );
+
       companies = companies.filter(c => 
         c.name.toLowerCase().includes(lowerTerm) || 
-        c.description.toLowerCase().includes(lowerTerm)
+        c.description.toLowerCase().includes(lowerTerm) ||
+        matchingCompanyIds.has(c._id)
       );
     }
 

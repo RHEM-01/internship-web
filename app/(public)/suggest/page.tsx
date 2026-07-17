@@ -136,7 +136,7 @@ export default function SuggestionPage() {
   }
 
   return (
-    <div className="container mx-auto md:px-6 py-16 md:py-24">
+    <div className="container mx-auto md:px-6 py-16 pt-8 md:pt-16 md:py-24">
       <Button
         variant="ghost"
         size="lg"
@@ -282,6 +282,11 @@ export default function SuggestionPage() {
                         items={countries}
                       >
                         <ComboboxInput
+                          ref={field.ref}
+                          name={field.name}
+                          onBlur={field.onBlur}
+                          aria-invalid={fieldState.invalid}
+                          aria-label="Country"
                           placeholder="Select country..."
                           className={cn(
                             "w-full h-12 rounded-xl bg-transparent font-normal",
@@ -323,6 +328,11 @@ export default function SuggestionPage() {
                         items={states}
                       >
                         <ComboboxInput
+                          ref={field.ref}
+                          name={field.name}
+                          onBlur={field.onBlur}
+                          aria-invalid={fieldState.invalid}
+                          aria-label="State"
                           placeholder="Select state..."
                           disabled={!countryCode}
                           className={cn(
@@ -362,6 +372,11 @@ export default function SuggestionPage() {
                         items={cities}
                       >
                         <ComboboxInput
+                          ref={field.ref}
+                          name={field.name}
+                          onBlur={field.onBlur}
+                          aria-invalid={fieldState.invalid}
+                          aria-label="City"
                           placeholder="Select city..."
                           disabled={!stateCode}
                           className={cn(
@@ -422,6 +437,11 @@ export default function SuggestionPage() {
                             className="absolute left-3 top-1/2 -translate-y-1/2 z-10 size-5 text-muted-foreground/70 pointer-events-none"
                           />
                           <ComboboxInput
+                            ref={field.ref}
+                            name={field.name}
+                            onBlur={field.onBlur}
+                            aria-invalid={fieldState.invalid}
+                            id={field.name}
                             placeholder="Select an industry..."
                             className={cn(
                               "w-full h-12 rounded-xl bg-transparent font-normal pl-10",

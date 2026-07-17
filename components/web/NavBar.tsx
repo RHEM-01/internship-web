@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { HugeiconsIcon } from '@hugeicons/react';
 import { FilterHorizontalIcon, Search02Icon } from '@hugeicons/core-free-icons';
 import { Button } from "../ui/button";
@@ -35,6 +35,14 @@ export default function NavBar({ className }: { className?: string }) {
   const [selectedCity, setSelectedCity] = useState(searchParams.get("city") || "");
   const [selectedIndustry, setSelectedIndustry] = useState(searchParams.get("industryId") || "");
   const [selectedDepartment, setSelectedDepartment] = useState(searchParams.get("departmentId") || "");
+
+  useEffect(() => {
+    setSearchTerm(searchParams.get("q") || "");
+    setSelectedState(searchParams.get("state") || "");
+    setSelectedCity(searchParams.get("city") || "");
+    setSelectedIndustry(searchParams.get("industryId") || "");
+    setSelectedDepartment(searchParams.get("departmentId") || "");
+  }, [searchParams]);
   
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
@@ -109,7 +117,7 @@ export default function NavBar({ className }: { className?: string }) {
         
         <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
           <PopoverTrigger render={
-            <Button variant="outline" size="icon-lg" className="rounded-lg shrink-0">
+            <Button variant="outline" size="icon-lg" className="rounded-lg shrink-0" aria-label="Filter directory">
               <HugeiconsIcon icon={FilterHorizontalIcon} className="w-5 h-5" />
             </Button>
           }>
