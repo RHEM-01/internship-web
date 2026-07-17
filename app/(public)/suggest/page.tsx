@@ -168,7 +168,7 @@ export default function SuggestionPage() {
           </div>
 
           <p className="text-[17px] text-muted-foreground leading-relaxed max-w-md font-medium mb-12">
-            Nexus Talent thrives on community insights. If you know a tech
+            SIWES Hub thrives on community insights. If you know a
             company offering exceptional internship opportunities, let us know.
             We prioritize transparency and student success.
           </p>
