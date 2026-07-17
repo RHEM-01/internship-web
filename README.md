@@ -1,36 +1,47 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# InternShip
 
-## Getting Started
+A directory platform solving the SIWES placement information gap for Nigerian university students — starting with Taraba State.
 
-First, run the development server:
+## The Problem
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Every year, thousands of students across Nigerian universities go through SIWES (Student Industrial Work Experience Scheme) with little to no reliable information on which companies actually take interns, what they do, or how to reach them. Placement info is scattered across WhatsApp groups, word of mouth, and outdated coordinator lists. **InternShip** fixes that by centralizing it into a single, searchable directory.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## What It Does (v1)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+v1 is a **read-only company directory** focused on Taraba State, giving students:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- A searchable, structured list of companies known to accept SIWES interns
+- Company details — industry, location, contact info, and past intern activity where available
+- A single source of truth instead of fragmented, informal channels
 
-## Learn More
+Future versions expand into a mobile app and richer, student-contributed data.
 
-To learn more about Next.js, take a look at the following resources:
+## Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Framework:** Next.js
+- **Language:** TypeScript
+- **ORM:** Prisma
+- **Database:** PostgreSQL
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Built full-stack from the start, with a mobile app (React Native) planned for v2.
 
-## Deploy on Vercel
+## Data Sourcing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Company data is collected through:
+- Peer form submissions from students who've completed SIWES
+- Direct outreach to the FUWukari SIWES coordinator's office
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Roadmap
+
+- [x] V1: Read-only company directory (Taraba State)
+- [ ] V2: React Native mobile app
+- [ ] Expand coverage beyond Taraba State
+- [ ] Student-contributed reviews and placement experiences
+
+## Status
+
+🚧 In active development.
+
+---
+
+Built by [LeRhem](#) — Computer Science / Software Engineering, Federal University Wukari.

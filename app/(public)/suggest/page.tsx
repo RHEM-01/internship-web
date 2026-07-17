@@ -2,6 +2,7 @@
 
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import posthog from "posthog-js";
 import { suggestionSchema, SuggestionFormValues } from "@/lib/schema";
 
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -96,9 +97,16 @@ export default function SuggestionPage() {
         userPhone: data.userPhone,
         companyPhone: data.companyPhone,
       });
+      posthog.capture("company_suggestion_submitted", {
+        has_website_url: Boolean(data.websiteUrl),
+        has_user_phone: Boolean(data.userPhone?.trim()),
+        has_company_phone: Boolean(data.companyPhone?.trim()),
+      });
       // Optionally show a success toast here
       form.reset();
     } catch (error) {
+      posthog.capture("company_suggestion_submission_failed");
+      posthog.captureException(error);
       console.error("Failed to submit suggestion", error);
     }
   }

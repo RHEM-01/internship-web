@@ -6,20 +6,18 @@ import NavBar from "@/components/web/NavBar";
 import {
     ArrowLeft02Icon,
     Share08Icon,
-    Bookmark02Icon,
     Clock01Icon,
     Calendar01Icon,
     Briefcase01Icon,
     InformationCircleIcon,
     CheckmarkCircle02Icon,
-    ArrowUpRight01Icon,
     Building02Icon,
     Location01Icon,
     Coins01Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
-import Image from "next/image";
+import ApplyButton from "@/components/web/company/ApplyButton";
 
 interface CompanyProp {
     params: Promise<{
@@ -232,10 +230,7 @@ export default async function CompanyDetails({ params }: CompanyProp) {
                                     </div>
                                 </div>
 
-                                <Button className="w-full" size="lg">
-                                    Apply Now
-                                    <HugeiconsIcon icon={ArrowUpRight01Icon} className="size-4" />
-                                </Button>
+                                <ApplyButton companyId={companyId} />
 
                                 <p className="text-xs text-muted-foreground text-center">24 applicants so far</p>
                             </CardContent>
