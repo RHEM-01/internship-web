@@ -3,9 +3,8 @@
 import * as React from "react"
 
 import { NavMain } from "@/components/web/admin/nav-main"
-import { NavProjects } from "@/components/web/admin/nav-projects"
-import { NavSecondary } from "@/components/web/admin/nav-secondary"
 import { NavUser } from "@/components/web/admin/nav-user"
+import { authClient } from "@/lib/auth-client"
 import {
   Sidebar,
   SidebarContent,
@@ -19,43 +18,24 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import { ComputerTerminalIcon, RoboticIcon, BookOpen02Icon, Settings05Icon, ChartRingIcon, SentIcon, CropIcon, PieChartIcon, MapsIcon, CommandIcon } from "@hugeicons/core-free-icons"
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   navMain: [
     {
-      title: "Playground",
-      url: "#",
+      title: "Overview",
+      url: "/admin",
       icon: (
         <HugeiconsIcon icon={ComputerTerminalIcon} strokeWidth={2} />
+      ),
+    },
+    {
+      title: "Locations",
+      url: "/admin/locations",
+      icon: (
+        <HugeiconsIcon icon={RoboticIcon} strokeWidth={2} />
       ),
       isActive: true,
       items: [
         {
-          title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Models",
-      url: "#",
-      icon: (
-        <HugeiconsIcon icon={RoboticIcon} strokeWidth={2} />
-      ),
-      items: [
-        {
-          title: "Genesis",
+          title: "Suggestions",
           url: "#",
         },
         {
@@ -68,98 +48,20 @@ const data = {
         },
       ],
     },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: (
-        <HugeiconsIcon icon={BookOpen02Icon} strokeWidth={2} />
-      ),
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: (
-        <HugeiconsIcon icon={Settings05Icon} strokeWidth={2} />
-      ),
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Support",
-      url: "#",
-      icon: (
-        <HugeiconsIcon icon={ChartRingIcon} strokeWidth={2} />
-      ),
-    },
-    {
-      title: "Feedback",
-      url: "#",
-      icon: (
-        <HugeiconsIcon icon={SentIcon} strokeWidth={2} />
-      ),
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: (
-        <HugeiconsIcon icon={CropIcon} strokeWidth={2} />
-      ),
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: (
-        <HugeiconsIcon icon={PieChartIcon} strokeWidth={2} />
-      ),
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: (
-        <HugeiconsIcon icon={MapsIcon} strokeWidth={2} />
-      ),
-    },
   ],
 }
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { data: session } = authClient.useSession();
+  const activeUser = session?.user ? {
+    name: session.user.name,
+    email: session.user.email,
+    avatar: session.user.image || "",
+  } : {
+    name: "Admin",
+    email: "[EMAIL_ADDRESS]",
+    avatar: "",
+  };
+
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
@@ -170,8 +72,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <HugeiconsIcon icon={CommandIcon} strokeWidth={2} className="size-4" />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">Acme Inc</span>
-                <span className="truncate text-xs">Enterprise</span>
+                <span className="truncate font-medium">SIWES Hub</span>
+                <span className="truncate text-xs">Admin</span>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -179,11 +81,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={activeUser} />
       </SidebarFooter>
     </Sidebar>
   )

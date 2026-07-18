@@ -17,6 +17,7 @@ import {
   FieldError,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, LoginFormValues } from "@/lib/schema";
@@ -30,6 +31,7 @@ export function LoginForm({
   ...props
 }: React.ComponentProps<"div">) {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -56,10 +58,17 @@ export function LoginForm({
     });
   }
 
-  async function onGoogleLogin() {
-    await authClient.signIn.social({
-      provider: "google",
-      callbackURL: "/",
+  function onGoogleLogin() {
+    startTransition(async () => {
+      await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/",
+        fetchOptions: {
+          onError: (ctx) => {
+            toast.error(ctx.error.message || "Failed to login with Google");
+          },
+        }
+      });
     });
   }
 
@@ -121,16 +130,16 @@ export function LoginForm({
                 )}
               />
               <div className="flex flex-col gap-2 pt-2">
-                <Button type="submit" disabled={form.formState.isSubmitting}>
+                <Button type="submit" disabled={form.formState.isSubmitting || isPending}>
                   {form.formState.isSubmitting ? "Logging in..." : "Login"}
                 </Button>
-                <Button variant="outline" type="button" onClick={onGoogleLogin}>
-                  Login with Google
+                <Button variant="outline" type="button" onClick={onGoogleLogin} disabled={form.formState.isSubmitting || isPending}>
+                  {isPending ? "Redirecting..." : "Login with Google"}
                 </Button>
               </div>
-              <FieldDescription className="text-center pt-4">
+              {/* <FieldDescription className="text-center pt-4">
                 Don&apos;t have an account? <Link href="/sign-up" className="hover:underline">Sign up</Link>
-              </FieldDescription>
+              </FieldDescription> */}
             </FieldGroup>
           </form>
         </CardContent>

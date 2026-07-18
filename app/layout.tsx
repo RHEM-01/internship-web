@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { ConvexClientProvider } from "@/components/web/ConvexClientProvider";
 import { Toaster } from "@/components/ui/sonner";
 import { getToken } from "@/lib/auth-server";
+import { ThemeProvider } from "@/components/web/theme-provider";
 
 const instrumentSansHeading = Instrument_Sans({
   subsets: ["latin"],
@@ -50,7 +51,16 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        <ConvexClientProvider initialToken={token}>{children}</ConvexClientProvider>
+        <ConvexClientProvider initialToken={token}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </ConvexClientProvider>
         <Toaster />
       </body>
     </html>
