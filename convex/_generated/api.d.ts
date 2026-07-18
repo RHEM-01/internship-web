@@ -8,11 +8,12 @@
  * @module
  */
 
+import type * as auth from "../auth.js";
 import type * as company from "../company.js";
 import type * as department from "../department.js";
+import type * as http from "../http.js";
 import type * as industry from "../industry.js";
 import type * as posthog from "../posthog.js";
-import type * as seed from "../seed.js";
 import type * as suggestion from "../suggestion.js";
 
 import type {
@@ -22,11 +23,12 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  auth: typeof auth;
   company: typeof company;
   department: typeof department;
+  http: typeof http;
   industry: typeof industry;
   posthog: typeof posthog;
-  seed: typeof seed;
   suggestion: typeof suggestion;
 }>;
 
@@ -58,4 +60,5 @@ export declare const internal: FilterApi<
 
 export declare const components: {
   posthog: import("@posthog/convex/_generated/component.js").ComponentApi<"posthog">;
+  betterAuth: import("../betterAuth/_generated/component.js").ComponentApi<"betterAuth">;
 };

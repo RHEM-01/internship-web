@@ -1,6 +1,7 @@
 // convex/convex.config.ts
 import { defineApp } from "convex/server";
 import { v } from "convex/values";
+import betterAuth from "./betterAuth/convex.config";
 import posthog from "@posthog/convex/convex.config.js";
 
 const app = defineApp({
@@ -24,5 +25,7 @@ app.use(posthog, {
     POSTHOG_FLAGS_POLLING_INTERVAL_SECONDS: app.env.POSTHOG_FLAGS_POLLING_INTERVAL_SECONDS,
   },
 });
+
+app.use(betterAuth);
 
 export default app;

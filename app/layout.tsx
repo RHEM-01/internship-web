@@ -4,6 +4,8 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ConvexClientProvider } from "@/components/web/ConvexClientProvider";
 import { Toaster } from "@/components/ui/sonner";
+import { getToken } from "@/lib/auth-server";
+import { ThemeProvider } from "@/components/web/theme-provider";
 
 const instrumentSansHeading = Instrument_Sans({
   subsets: ["latin"],
@@ -28,11 +30,12 @@ export const metadata: Metadata = {
     "A directory platform solving the SIWES placement information gap for Nigerian university students.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const token = await getToken();
   return (
     <html
       lang="en"
@@ -48,7 +51,16 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        <ConvexClientProvider>{children}</ConvexClientProvider>
+        <ConvexClientProvider initialToken={token}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </ConvexClientProvider>
         <Toaster />
       </body>
     </html>
