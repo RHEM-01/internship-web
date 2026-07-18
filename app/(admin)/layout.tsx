@@ -25,7 +25,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     redirect("/login");
   }
 
-  if ((user as any).role !== "admin") {
+  if (!("role" in user) || user.role !== "admin") {
     redirect("/");
   }
 
@@ -43,13 +43,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Build Your Application
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                  <BreadcrumbPage>Admin Dashboard</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>

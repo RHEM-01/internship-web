@@ -16,7 +16,7 @@ export default function ThemeToggle() {
   }, []);
 
   function changeTheme() {
-    setTheme(resolvedTheme === "dark" || resolvedTheme === "system" ? "light" : "dark");
+    setTheme(resolvedTheme === "dark" ? "light" : "dark");
   }
 
   if (!mounted) {

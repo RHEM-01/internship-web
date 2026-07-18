@@ -15,7 +15,8 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { ComputerTerminalIcon, RoboticIcon, BookOpen02Icon, Settings05Icon, ChartRingIcon, SentIcon, CropIcon, PieChartIcon, MapsIcon, CommandIcon } from "@hugeicons/core-free-icons"
+import { ComputerTerminalIcon, RoboticIcon } from "@hugeicons/core-free-icons"
+import Image from "next/image";
 
 const data = {
   navMain: [
@@ -68,12 +69,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" render={<a href="#" />}>
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                <HugeiconsIcon icon={CommandIcon} strokeWidth={2} className="size-4" />
+              <div className="flex aspect-square size-8 items-center justify-center rounded-lg">
+                <Image
+                  src="/InterShip-logo.png"
+                  width={32}
+                  height={32}
+                  alt="Logo"
+                />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">SIWES Hub</span>
-                <span className="truncate text-xs">Admin</span>
+                <span className="truncate text-xs text-muted-foreground">Admin</span>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>

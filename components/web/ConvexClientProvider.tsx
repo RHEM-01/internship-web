@@ -17,7 +17,8 @@ export function ConvexClientProvider({
   return (
     <ConvexBetterAuthProvider
       client={convex}
-      authClient={authClient as any}
+      // @ts-expect-error -- known plugin-typing mismatch between better-auth client and convex provider
+      authClient={authClient}
       initialToken={initialToken}
     >
       {children}

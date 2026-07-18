@@ -1,7 +1,7 @@
 export default function LocationsPage() {
     return (
-        <main>
+        <div>
             <h1>Locations</h1>
-        </main>
+        </div>
     )
 }
