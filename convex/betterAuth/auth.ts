@@ -14,7 +14,7 @@ import { convexAdapter } from "@convex-dev/better-auth";
 // Better Auth Options
 export const createAuthOptions = (ctx: GenericCtx<DataModel>) => {
   return {
-    appName: "My App",
+    appName: "SIWES Hub",
     baseURL: process.env.SITE_URL,
     secret: process.env.BETTER_AUTH_SECRET,
     database: convexAdapter(ctx as any, {} as any),
