@@ -6,6 +6,12 @@ import { cn } from "@/lib/utils"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { ArrowRight01Icon, MoreHorizontalCircle01Icon } from "@hugeicons/core-free-icons"
 
+/**
+ * Renders a navigation container for breadcrumb items.
+ *
+ * @param className - Additional CSS classes for the navigation container
+ * @param props - Additional navigation element properties
+ */
 function Breadcrumb({ className, ...props }: React.ComponentProps<"nav">) {
   return (
     <nav
@@ -17,6 +23,11 @@ function Breadcrumb({ className, ...props }: React.ComponentProps<"nav">) {
   )
 }
 
+/**
+ * Renders the ordered list that contains breadcrumb items.
+ *
+ * @param className - Additional CSS classes to apply to the list.
+ */
 function BreadcrumbList({ className, ...props }: React.ComponentProps<"ol">) {
   return (
     <ol
@@ -40,6 +51,12 @@ function BreadcrumbItem({ className, ...props }: React.ComponentProps<"li">) {
   )
 }
 
+/**
+ * Renders a navigational link within a breadcrumb.
+ *
+ * @param className - Additional classes to apply to the link
+ * @param render - Custom rendering configuration for the link
+ */
 function BreadcrumbLink({
   className,
   render,
@@ -60,6 +77,12 @@ function BreadcrumbLink({
   })
 }
 
+/**
+ * Renders the current page in a breadcrumb trail.
+ *
+ * @param className - Additional CSS classes to apply.
+ * @param props - Additional properties forwarded to the element.
+ */
 function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
   return (
     <span
@@ -73,6 +96,12 @@ function BreadcrumbPage({ className, ...props }: React.ComponentProps<"span">) {
   )
 }
 
+/**
+ * Renders a visual separator between breadcrumb items.
+ *
+ * @param children - Optional custom separator content; an arrow icon is used when omitted.
+ * @param className - Additional classes applied to the separator.
+ */
 function BreadcrumbSeparator({
   children,
   className,
@@ -93,6 +122,12 @@ function BreadcrumbSeparator({
   )
 }
 
+/**
+ * Renders an ellipsis indicator for omitted breadcrumb items.
+ *
+ * @param className - Additional classes to apply to the indicator.
+ * @param props - Additional properties for the indicator element.
+ */
 function BreadcrumbEllipsis({
   className,
   ...props

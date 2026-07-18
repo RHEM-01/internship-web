@@ -30,6 +30,11 @@ export const metadata: Metadata = {
     "A directory platform solving the SIWES placement information gap for Nigerian university students.",
 };
 
+/**
+ * Renders the root application layout with authentication, theming, and notifications.
+ *
+ * @param children - The page content rendered inside the application layout
+ */
 export default async function RootLayout({
   children,
 }: Readonly<{

@@ -8,22 +8,47 @@ import { Button } from "@/components/ui/button"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { Cancel01Icon } from "@hugeicons/core-free-icons"
 
+/**
+ * Provides the root context for a sheet.
+ *
+ * @param props - Properties forwarded to the sheet root.
+ */
 function Sheet({ ...props }: SheetPrimitive.Root.Props) {
   return <SheetPrimitive.Root data-slot="sheet" {...props} />
 }
 
+/**
+ * Renders the control that opens a sheet.
+ *
+ * @param props - Properties forwarded to the sheet trigger.
+ */
 function SheetTrigger({ ...props }: SheetPrimitive.Trigger.Props) {
   return <SheetPrimitive.Trigger data-slot="sheet-trigger" {...props} />
 }
 
+/**
+ * Renders a control that closes the sheet.
+ *
+ * @param props - Properties forwarded to the underlying sheet close primitive.
+ */
 function SheetClose({ ...props }: SheetPrimitive.Close.Props) {
   return <SheetPrimitive.Close data-slot="sheet-close" {...props} />
 }
 
+/**
+ * Renders a portal for sheet content.
+ *
+ * @param props - Props forwarded to the underlying sheet portal.
+ */
 function SheetPortal({ ...props }: SheetPrimitive.Portal.Props) {
   return <SheetPrimitive.Portal data-slot="sheet-portal" {...props} />
 }
 
+/**
+ * Renders the backdrop behind an open sheet.
+ *
+ * @param className - Additional classes to apply to the backdrop.
+ */
 function SheetOverlay({ className, ...props }: SheetPrimitive.Backdrop.Props) {
   return (
     <SheetPrimitive.Backdrop
@@ -37,6 +62,13 @@ function SheetOverlay({ className, ...props }: SheetPrimitive.Backdrop.Props) {
   )
 }
 
+/**
+ * Renders a side-positioned sheet panel with an overlay and optional close button.
+ *
+ * @param side - The edge of the viewport from which the sheet opens.
+ * @param showCloseButton - Whether to display the sheet's close button.
+ * @returns The rendered sheet content.
+ */
 function SheetContent({
   className,
   children,
@@ -80,6 +112,11 @@ function SheetContent({
   )
 }
 
+/**
+ * Renders the header section of a sheet.
+ *
+ * @param className - Additional CSS classes to apply to the header
+ */
 function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -90,6 +127,11 @@ function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/**
+ * Renders a footer section for a sheet.
+ *
+ * @param className - Additional CSS classes to apply to the footer
+ */
 function SheetFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -100,6 +142,11 @@ function SheetFooter({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/**
+ * Renders a styled title for a sheet.
+ *
+ * @param className - Additional classes to apply to the title.
+ */
 function SheetTitle({ className, ...props }: SheetPrimitive.Title.Props) {
   return (
     <SheetPrimitive.Title
@@ -113,6 +160,11 @@ function SheetTitle({ className, ...props }: SheetPrimitive.Title.Props) {
   )
 }
 
+/**
+ * Renders descriptive text for a sheet.
+ *
+ * @param className - Additional CSS classes to apply to the description
+ */
 function SheetDescription({
   className,
   ...props

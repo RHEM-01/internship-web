@@ -19,6 +19,11 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react"
 import { ArrowRight01Icon } from "@hugeicons/core-free-icons"
 
+/**
+ * Renders the Platform sidebar navigation with optional collapsible sub-navigation items.
+ *
+ * @param items - The top-level navigation items and their optional sub-items.
+ */
 export function NavMain({
   items,
 }: {
