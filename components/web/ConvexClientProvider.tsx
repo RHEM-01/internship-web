@@ -7,6 +7,12 @@ import { ReactNode } from "react";
 
 const convex = new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
+/**
+ * Provides Convex and authentication context to descendant components.
+ *
+ * @param initialToken - An optional authentication token used to initialize the provider.
+ * @returns The child content wrapped with Convex and authentication providers.
+ */
 export function ConvexClientProvider({
   children,
   initialToken,

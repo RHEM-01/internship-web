@@ -50,6 +50,11 @@ const data = {
     },
   ],
 }
+/**
+ * Renders the administrative sidebar with navigation and the current user profile.
+ *
+ * @param props - Properties forwarded to the sidebar container.
+ */
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: session } = authClient.useSession();
   const activeUser = session?.user ? {

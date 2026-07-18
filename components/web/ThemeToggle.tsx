@@ -7,6 +7,9 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Moon01Icon, SunIcon } from "@hugeicons/core-free-icons";
 import { useEffect, useState } from "react";
 
+/**
+ * Provides a control for toggling between the light and dark themes.
+ */
 export default function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
   const { setTheme, resolvedTheme } = useTheme();

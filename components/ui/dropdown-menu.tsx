@@ -7,18 +7,42 @@ import { cn } from "@/lib/utils"
 import { HugeiconsIcon } from "@hugeicons/react"
 import { ArrowRight01Icon, Tick02Icon } from "@hugeicons/core-free-icons"
 
+/**
+ * Provides the root container for a dropdown menu.
+ *
+ * @param props - Props forwarded to the menu root.
+ */
 function DropdownMenu({ ...props }: MenuPrimitive.Root.Props) {
   return <MenuPrimitive.Root data-slot="dropdown-menu" {...props} />
 }
 
+/**
+ * Renders a portal for dropdown menu content.
+ *
+ * @param props - Properties forwarded to the menu portal.
+ */
 function DropdownMenuPortal({ ...props }: MenuPrimitive.Portal.Props) {
   return <MenuPrimitive.Portal data-slot="dropdown-menu-portal" {...props} />
 }
 
+/**
+ * Renders the control that opens and closes a dropdown menu.
+ *
+ * @param props - Properties forwarded to the menu trigger.
+ */
 function DropdownMenuTrigger({ ...props }: MenuPrimitive.Trigger.Props) {
   return <MenuPrimitive.Trigger data-slot="dropdown-menu-trigger" {...props} />
 }
 
+/**
+ * Renders the positioned content panel for a dropdown menu.
+ *
+ * @param align - Alignment of the panel relative to its anchor.
+ * @param alignOffset - Offset applied along the alignment axis.
+ * @param side - Side of the anchor where the panel is placed.
+ * @param sideOffset - Offset applied from the anchor.
+ * @param className - Additional classes applied to the panel.
+ */
 function DropdownMenuContent({
   align = "start",
   alignOffset = 0,
@@ -50,10 +74,20 @@ function DropdownMenuContent({
   )
 }
 
+/**
+ * Groups related items within a dropdown menu.
+ *
+ * @param props - Properties forwarded to the menu group.
+ */
 function DropdownMenuGroup({ ...props }: MenuPrimitive.Group.Props) {
   return <MenuPrimitive.Group data-slot="dropdown-menu-group" {...props} />
 }
 
+/**
+ * Renders a styled label for a dropdown menu group.
+ *
+ * @param inset - Whether to apply inset label styling.
+ */
 function DropdownMenuLabel({
   className,
   inset,
@@ -74,6 +108,12 @@ function DropdownMenuLabel({
   )
 }
 
+/**
+ * Renders an interactive dropdown menu item with optional inset spacing and destructive styling.
+ *
+ * @param inset - Whether to apply inset spacing for the item content
+ * @param variant - The item's visual variant
+ */
 function DropdownMenuItem({
   className,
   inset,
@@ -97,10 +137,20 @@ function DropdownMenuItem({
   )
 }
 
+/**
+ * Groups a trigger and its nested dropdown menu content.
+ *
+ * @param props - Properties for the submenu root.
+ */
 function DropdownMenuSub({ ...props }: MenuPrimitive.SubmenuRoot.Props) {
   return <MenuPrimitive.SubmenuRoot data-slot="dropdown-menu-sub" {...props} />
 }
 
+/**
+ * Renders a trigger for opening a nested dropdown menu.
+ *
+ * @param inset - Whether to apply inset spacing to the trigger content.
+ */
 function DropdownMenuSubTrigger({
   className,
   inset,
@@ -125,6 +175,15 @@ function DropdownMenuSubTrigger({
   )
 }
 
+/**
+ * Renders the content container for a nested dropdown menu.
+ *
+ * @param align - The alignment of the submenu relative to its anchor.
+ * @param alignOffset - The alignment offset from the anchor.
+ * @param side - The side of the anchor where the submenu appears.
+ * @param sideOffset - The distance between the submenu and its anchor.
+ * @param className - Additional CSS classes for the submenu content.
+ */
 function DropdownMenuSubContent({
   align = "start",
   alignOffset = -3,
@@ -146,6 +205,12 @@ function DropdownMenuSubContent({
   )
 }
 
+/**
+ * Renders a dropdown menu item with a checkbox indicator.
+ *
+ * @param inset - Adds inset styling to the item content.
+ * @returns A selectable checkbox menu item with its label and checked-state indicator.
+ */
 function DropdownMenuCheckboxItem({
   className,
   children,
@@ -179,6 +244,11 @@ function DropdownMenuCheckboxItem({
   )
 }
 
+/**
+ * Groups radio items within a dropdown menu.
+ *
+ * @param props - Properties forwarded to the radio group.
+ */
 function DropdownMenuRadioGroup({ ...props }: MenuPrimitive.RadioGroup.Props) {
   return (
     <MenuPrimitive.RadioGroup
@@ -188,6 +258,12 @@ function DropdownMenuRadioGroup({ ...props }: MenuPrimitive.RadioGroup.Props) {
   )
 }
 
+/**
+ * Renders a selectable radio item within a dropdown menu.
+ *
+ * @param inset - Whether to apply inset spacing for the item content.
+ * @returns A styled dropdown menu radio item with a selection indicator.
+ */
 function DropdownMenuRadioItem({
   className,
   children,
@@ -219,6 +295,11 @@ function DropdownMenuRadioItem({
   )
 }
 
+/**
+ * Renders a visual separator between dropdown menu items.
+ *
+ * @param className - Additional classes to apply to the separator.
+ */
 function DropdownMenuSeparator({
   className,
   ...props
@@ -232,6 +313,12 @@ function DropdownMenuSeparator({
   )
 }
 
+/**
+ * Renders a keyboard shortcut label within a dropdown menu.
+ *
+ * @param className - Additional classes merged with the shortcut styling.
+ * @returns A styled span element for displaying a keyboard shortcut.
+ */
 function DropdownMenuShortcut({
   className,
   ...props

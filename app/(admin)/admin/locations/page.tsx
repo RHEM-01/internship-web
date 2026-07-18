@@ -1,3 +1,6 @@
+/**
+ * Renders the Locations page.
+ */
 export default function LocationsPage() {
     return (
         <main>

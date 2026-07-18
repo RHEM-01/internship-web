@@ -5,6 +5,11 @@ import { Avatar as AvatarPrimitive } from "@base-ui/react/avatar"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * Renders a styled avatar container with configurable sizing.
+ *
+ * @param size - The avatar size variant.
+ */
 function Avatar({
   className,
   size = "default",
@@ -25,6 +30,11 @@ function Avatar({
   )
 }
 
+/**
+ * Renders an avatar image with consistent sizing and styling.
+ *
+ * @param className - Additional CSS classes to apply to the image
+ */
 function AvatarImage({ className, ...props }: AvatarPrimitive.Image.Props) {
   return (
     <AvatarPrimitive.Image
@@ -38,6 +48,11 @@ function AvatarImage({ className, ...props }: AvatarPrimitive.Image.Props) {
   )
 }
 
+/**
+ * Renders fallback content when an avatar image is unavailable.
+ *
+ * @param className - Additional CSS classes for the fallback content
+ */
 function AvatarFallback({
   className,
   ...props
@@ -54,6 +69,11 @@ function AvatarFallback({
   )
 }
 
+/**
+ * Renders a badge positioned over an avatar.
+ *
+ * @returns A styled badge span element.
+ */
 function AvatarBadge({ className, ...props }: React.ComponentProps<"span">) {
   return (
     <span
@@ -70,6 +90,12 @@ function AvatarBadge({ className, ...props }: React.ComponentProps<"span">) {
   )
 }
 
+/**
+ * Groups avatars in an overlapping layout with consistent ring styling.
+ *
+ * @param className - Additional CSS classes for the group container
+ * @param props - Additional properties for the container element
+ */
 function AvatarGroup({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -83,6 +109,11 @@ function AvatarGroup({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+/**
+ * Displays a circular count indicator for an avatar group.
+ *
+ * @returns A styled `<div>` containing the group count content.
+ */
 function AvatarGroupCount({
   className,
   ...props

@@ -27,6 +27,11 @@ import { useRouter } from "next/navigation"
 import ThemeToggle from "../ThemeToggle"
 import { Separator } from "@/components/ui/separator"
 
+/**
+ * Renders a sidebar user menu with profile details, account options, theme controls, and logout navigation.
+ *
+ * @param user - The user's display name, email address, and avatar URL
+ */
 export function NavUser({
   user,
 }: {

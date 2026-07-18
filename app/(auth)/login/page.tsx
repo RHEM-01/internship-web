@@ -3,6 +3,11 @@ import { fetchAuthQuery } from "@/lib/auth-server"
 import { api } from "@/convex/_generated/api"
 import { redirect } from "next/navigation"
 
+/**
+ * Renders the login page for unauthenticated users and redirects authenticated users to the home page.
+ *
+ * @returns The login page content.
+ */
 export default async function Page() {
   const user = await fetchAuthQuery(api.auth.getCurrentUser);
   if (user) {

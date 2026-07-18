@@ -18,6 +18,14 @@ import { fetchAuthQuery } from "@/lib/auth-server"
 import { api } from "@/convex/_generated/api"
 import { redirect } from "next/navigation"
 
+/**
+ * Provides the authenticated admin layout for nested pages.
+ *
+ * Unauthenticated users are redirected to `/login`, and users without the admin role are redirected to `/`.
+ *
+ * @param children - The content rendered within the admin layout
+ * @returns The admin layout containing the sidebar, header, and page content
+ */
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const user = await fetchAuthQuery(api.auth.getCurrentUser);
 

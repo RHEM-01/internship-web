@@ -26,6 +26,11 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
 
+/**
+ * Renders an email and password login form with Google sign-in support.
+ *
+ * @returns The login form component.
+ */
 export function LoginForm({
   className,
   ...props
