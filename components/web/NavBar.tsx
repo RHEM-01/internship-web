@@ -182,8 +182,9 @@ export default function NavBar({ className }: { className?: string }) {
 
                 {/* Industry */}
                 <Combobox
-                  value={selectedIndustry}
-                  onValueChange={(val) => setSelectedIndustry(val || "")}
+                  value={industries?.find(i => i._id === selectedIndustry) || null}
+                  onValueChange={(val) => setSelectedIndustry(val?._id || "")}
+                  itemToStringLabel={(item) => item ? item.name : ""}
                   items={industries || []}
                 >
                   <ComboboxInput
@@ -194,7 +195,7 @@ export default function NavBar({ className }: { className?: string }) {
                     <ComboboxEmpty>No industry found.</ComboboxEmpty>
                     <ComboboxList>
                       {ind => (
-                        <ComboboxItem key={ind._id} value={ind._id}>
+                        <ComboboxItem key={ind._id} value={ind}>
                           {ind.name}
                         </ComboboxItem>
                       )}
@@ -204,8 +205,9 @@ export default function NavBar({ className }: { className?: string }) {
 
                 {/* Department */}
                 <Combobox
-                  value={selectedDepartment}
-                  onValueChange={(val) => setSelectedDepartment(val || "")}
+                  value={departments?.find(d => d._id === selectedDepartment) || null}
+                  onValueChange={(val) => setSelectedDepartment(val?._id || "")}
+                  itemToStringLabel={(item) => item ? item.name : ""}
                   items={departments || []}
                 >
                   <ComboboxInput
@@ -216,7 +218,7 @@ export default function NavBar({ className }: { className?: string }) {
                     <ComboboxEmpty>No department found.</ComboboxEmpty>
                     <ComboboxList>
                       {dept => (
-                        <ComboboxItem key={dept._id} value={dept._id}>
+                        <ComboboxItem key={dept._id} value={dept.name}>
                           {dept.name}
                         </ComboboxItem>
                       )}
