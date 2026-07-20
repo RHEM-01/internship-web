@@ -1,6 +1,7 @@
 "use client";
 
-import { Controller, useForm, useFieldArray } from "react-hook-form";
+import { useState } from "react";
+import { Controller, useForm, useFieldArray, type FieldError as RHFFieldError } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -59,7 +60,7 @@ const MAX_DESCRIPTION_CHARS = 500;
 interface LocationComboboxProps {
   label: string;
   field: { name: string; value?: string; onChange: (val: string) => void };
-  fieldState: { invalid?: boolean; error?: any };
+  fieldState: { invalid?: boolean; error?: RHFFieldError };
   options: { key: string; label: string }[];
   placeholder: string;
   searchPlaceholder: string;
@@ -79,12 +80,14 @@ function LocationCombobox({
   disabled,
   onSelect,
 }: LocationComboboxProps) {
+  const [open, setOpen] = useState(false);
+
   return (
     <Field data-invalid={fieldState.invalid}>
       <FieldContent>
         <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
       </FieldContent>
-      <Popover>
+      <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger
           render={
             <Button
@@ -122,7 +125,10 @@ function LocationCombobox({
                     key={opt.key}
                     value={opt.label}
                     data-checked={opt.label === field.value}
-                    onSelect={() => onSelect(opt.label)}
+                    onSelect={() => {
+                      onSelect(opt.label);
+                      setOpen(false);
+                    }}
                   >
                     {opt.label}
                   </CommandItem>
@@ -468,7 +474,7 @@ export default function AddNewCompany() {
                     field={field}
                     fieldState={fieldState}
                     options={cities.map((c) => ({
-                      key: c.name,
+                      key: `${c.name}-${c.latitude ?? ""}-${c.longitude ?? ""}`,
                       label: c.name,
                     }))}
                     placeholder="Select city"

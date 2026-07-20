@@ -14,7 +14,7 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import { fetchAuthQuery } from "@/lib/auth-server"
 import { api } from "@/convex/_generated/api"
 import { redirect } from "next/navigation"
-import { AppSidebar } from "@/components/web/dashboard/admin/app-sidebar"
+import { AppSidebar } from "@/components/web/dashboard/app-sidebar"
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const user = await fetchAuthQuery(api.auth.getCurrentUser);
