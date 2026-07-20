@@ -81,9 +81,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">SIWES Hub</span>
+                <span className="truncate font-medium">SIWES Space</span>
                 <span className="truncate text-xs text-muted-foreground">
-                  Admin
+                  Admin Dashboard
                 </span>
               </div>
             </SidebarMenuButton>

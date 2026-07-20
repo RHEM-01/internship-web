@@ -97,7 +97,7 @@ export default function NavBar({ className }: { className?: string }) {
           alt="Logo"
         />
         <span className="text-[#003BCC] text-xl font-bold tracking-tight">
-          SIWES Hub
+          SIWES Space
         </span>
       </div>
 
