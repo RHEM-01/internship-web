@@ -20,7 +20,7 @@ export const companySchema = z.object({
   certifyChecked: z.boolean().refine((val) => val === true, {
     message: "You must certify before submitting",
   }),
-  positions: z.array(positionSchema),
+  positions: z.array(positionSchema).min(1, "At least one position is required"),
 });
 
 export type CompanyFormValues = z.infer<typeof companySchema>;

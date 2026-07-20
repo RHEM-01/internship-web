@@ -1,15 +1,19 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
+import { paginationOptsValidator } from "convex/server";
 import { posthog } from "./posthog";
 
 export const getAll = query({
-  args: {},
-  handler: async (ctx) => {
-    const companies = await ctx.db.query("companies").collect();
-    return companies.map((company) => ({
-      ...company,
-      openRolesCount: company.openRolesCount || 0,
-    }));
+  args: { paginationOpts: paginationOptsValidator },
+  handler: async (ctx, args) => {
+    const results = await ctx.db.query("companies").paginate(args.paginationOpts);
+    return {
+      ...results,
+      page: results.page.map((company) => ({
+        ...company,
+        openRolesCount: company.openRolesCount || 0,
+      })),
+    };
   },
 });
 
