@@ -218,7 +218,7 @@ export default function NavBar({ className }: { className?: string }) {
                     <ComboboxEmpty>No department found.</ComboboxEmpty>
                     <ComboboxList>
                       {dept => (
-                        <ComboboxItem key={dept._id} value={dept.name}>
+                        <ComboboxItem key={dept._id} value={dept}>
                           {dept.name}
                         </ComboboxItem>
                       )}

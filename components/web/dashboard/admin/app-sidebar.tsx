@@ -58,13 +58,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     email: session.user.email,
     avatar: session.user.image || "",
   } : {
-    name: "Admin",
+    name: "[Name]",
     email: "[EMAIL_ADDRESS]",
     avatar: "",
   };
 
   return (
-    <Sidebar variant="inset" {...props}>
+    <Sidebar variant="floating" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>

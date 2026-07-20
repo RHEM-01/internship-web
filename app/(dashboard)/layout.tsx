@@ -1,11 +1,8 @@
-import { AppSidebar } from "@/components/web/admin/app-sidebar"
 import {
   Breadcrumb,
   BreadcrumbItem,
-  BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-  BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { Separator } from "@/components/ui/separator"
 import {
@@ -17,6 +14,7 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import { fetchAuthQuery } from "@/lib/auth-server"
 import { api } from "@/convex/_generated/api"
 import { redirect } from "next/navigation"
+import { AppSidebar } from "@/components/web/dashboard/admin/app-sidebar"
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const user = await fetchAuthQuery(api.auth.getCurrentUser);
@@ -25,7 +23,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     redirect("/login");
   }
 
-  if (!("role" in user) || user.role !== "super_admin") {
+  if (!("role" in user) || user.role !== "admin") {
     redirect("/");
   }
 
@@ -43,7 +41,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbPage>Admin Dashboard</BreadcrumbPage>
+                  <BreadcrumbPage>Dashboard</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
