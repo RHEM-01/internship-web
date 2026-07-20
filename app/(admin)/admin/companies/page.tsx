@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "convex/react";
+import { usePaginatedQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Copy01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
@@ -40,8 +40,19 @@ function CopyButton({ text }: { text: string }) {
 }
 
 export default function CompaniesPage() {
-  const suggestions = useQuery(api.suggestion.getAll);
-  const companies = useQuery(api.company.getAll);
+  const { results: suggestions, status: suggestionsStatus } = usePaginatedQuery(
+    api.suggestion.getAll,
+    {},
+    { initialNumItems: 50 }
+  );
+  const { results: companies, status: companiesStatus } = usePaginatedQuery(
+    api.company.getAll,
+    {},
+    { initialNumItems: 50 }
+  );
+
+  const isSuggestionsLoading = suggestionsStatus === "LoadingFirstPage";
+  const isCompaniesLoading = companiesStatus === "LoadingFirstPage";
 
   return (
     <div className="p-6 space-y-6">
@@ -49,12 +60,12 @@ export default function CompaniesPage() {
 
       <div className="flex flex-col gap-10">
         {/* Suggestions Section */}
-        <Card className="flex flex-col h-[600px] shadow-sm">
+        <Card className="flex flex-col h-150 shadow-sm">
           <CardHeader>
             <CardTitle>Suggestions</CardTitle>
           </CardHeader>
           <CardContent className="flex-1 overflow-auto">
-            {suggestions === undefined ? (
+            {isSuggestionsLoading ? (
               <div className="space-y-4">
                 <Skeleton className="h-12 w-full rounded-md" />
                 <Skeleton className="h-12 w-full rounded-md" />
@@ -118,12 +129,12 @@ export default function CompaniesPage() {
         </Card>
 
         {/* Companies Section */}
-        <Card className="flex flex-col h-[600px] shadow-sm">
+        <Card className="flex flex-col h-150 shadow-sm">
           <CardHeader>
             <CardTitle>Companies</CardTitle>
           </CardHeader>
           <CardContent className="flex-1 overflow-auto">
-            {companies === undefined ? (
+            {isCompaniesLoading ? (
               <div className="space-y-4">
                 <Skeleton className="h-12 w-full rounded-md" />
                 <Skeleton className="h-12 w-full rounded-md" />

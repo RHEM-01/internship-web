@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 
-import { NavMain } from "@/components/web/admin/nav-main"
-import { NavUser } from "@/components/web/admin/nav-user"
-import { authClient } from "@/lib/auth-client"
+import { NavMain } from "@/components/web/admin/nav-main";
+import { NavUser } from "@/components/web/admin/nav-user";
+import { authClient } from "@/lib/auth-client";
 import {
   Sidebar,
   SidebarContent,
@@ -13,9 +13,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import { HugeiconsIcon } from "@hugeicons/react"
-import { ComputerTerminalIcon, RoboticIcon } from "@hugeicons/core-free-icons"
+} from "@/components/ui/sidebar";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ComputerTerminalIcon, RoboticIcon } from "@hugeicons/core-free-icons";
 import Image from "next/image";
 
 const data = {
@@ -23,16 +23,12 @@ const data = {
     {
       title: "Overview",
       url: "/admin",
-      icon: (
-        <HugeiconsIcon icon={ComputerTerminalIcon} strokeWidth={2} />
-      ),
+      icon: <HugeiconsIcon icon={ComputerTerminalIcon} strokeWidth={2} />,
     },
     {
-      title: "Locations",
+      title: "Companies",
       url: "/admin/companies",
-      icon: (
-        <HugeiconsIcon icon={RoboticIcon} strokeWidth={2} />
-      ),
+      icon: <HugeiconsIcon icon={RoboticIcon} strokeWidth={2} />,
       isActive: true,
       items: [
         {
@@ -49,19 +45,26 @@ const data = {
         },
       ],
     },
+    {
+      title: "Users",
+      url: "/admin/users",
+      icon: <HugeiconsIcon icon={ComputerTerminalIcon} strokeWidth={2} />,
+    },
   ],
-}
+};
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: session } = authClient.useSession();
-  const activeUser = session?.user ? {
-    name: session.user.name,
-    email: session.user.email,
-    avatar: session.user.image || "",
-  } : {
-    name: "Admin",
-    email: "[EMAIL_ADDRESS]",
-    avatar: "",
-  };
+  const activeUser = session?.user
+    ? {
+        name: session.user.name,
+        email: session.user.email,
+        avatar: session.user.image || "",
+      }
+    : {
+        name: "Admin",
+        email: "[EMAIL_ADDRESS]",
+        avatar: "",
+      };
 
   return (
     <Sidebar variant="inset" {...props}>
@@ -79,7 +82,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">SIWES Hub</span>
-                <span className="truncate text-xs text-muted-foreground">Admin</span>
+                <span className="truncate text-xs text-muted-foreground">
+                  Admin
+                </span>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -92,5 +97,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavUser user={activeUser} />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }

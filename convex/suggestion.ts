@@ -1,11 +1,12 @@
 import { mutation, query } from "./_generated/server";
 import { v, ConvexError } from "convex/values";
+import { paginationOptsValidator } from "convex/server";
 import { posthog } from "./posthog";
 
 export const getAll = query({
-  args: {},
-  handler: async (ctx) => {
-    return await ctx.db.query("suggestions").collect();
+  args: { paginationOpts: paginationOptsValidator },
+  handler: async (ctx, args) => {
+    return await ctx.db.query("suggestions").paginate(args.paginationOpts);
   },
 });
 

@@ -290,8 +290,7 @@ export default function AddPosition({ onAdd }: AddPositionProps) {
                                                     value={field.value}
                                                     onValueChange={(val) => {
                                                         if (val.length > 0) {
-                                                            const newValue = val.filter((v) => !field.value.includes(v));
-                                                            field.onChange(newValue.length > 0 ? newValue : val.slice(-1));
+                                                            field.onChange(val);
                                                         }
                                                     }}
                                                     className="w-full"

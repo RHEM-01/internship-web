@@ -21,11 +21,10 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { HugeiconsIcon } from "@hugeicons/react"
-import { UnfoldMoreIcon, SparklesIcon, CheckmarkBadgeIcon, CreditCardIcon, NotificationIcon, LogoutIcon } from "@hugeicons/core-free-icons"
+import { UnfoldMoreIcon, CheckmarkBadgeIcon, NotificationIcon, LogoutIcon } from "@hugeicons/core-free-icons"
 import { authClient } from "@/lib/auth-client"
 import { useRouter } from "next/navigation"
-import ThemeToggle from "../ThemeToggle"
-import { Separator } from "@/components/ui/separator"
+import ThemeToggle from "@/components/web/ThemeToggle"
 
 export function NavUser({
   user,

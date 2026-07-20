@@ -51,9 +51,91 @@ import {
 import { Separator } from "@/components/ui/separator";
 import AddPosition from "../../../../../components/web/admin/companies/add/AddPosition";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Country, State, City } from "country-state-city";
 
 const MAX_DESCRIPTION_CHARS = 500;
+
+interface LocationComboboxProps {
+  label: string;
+  field: { name: string; value?: string; onChange: (val: string) => void };
+  fieldState: { invalid?: boolean; error?: any };
+  options: { key: string; label: string }[];
+  placeholder: string;
+  searchPlaceholder: string;
+  emptyText: string;
+  disabled?: boolean;
+  onSelect: (value: string) => void;
+}
+
+function LocationCombobox({
+  label,
+  field,
+  fieldState,
+  options,
+  placeholder,
+  searchPlaceholder,
+  emptyText,
+  disabled,
+  onSelect,
+}: LocationComboboxProps) {
+  return (
+    <Field data-invalid={fieldState.invalid}>
+      <FieldContent>
+        <FieldLabel htmlFor={field.name}>{label}</FieldLabel>
+      </FieldContent>
+      <Popover>
+        <PopoverTrigger
+          render={
+            <Button
+              type="button"
+              id={field.name}
+              variant="outline"
+              role="combobox"
+              disabled={disabled}
+              className={cn(
+                "w-full justify-between bg-transparent font-normal",
+                !field.value && "text-muted-foreground",
+                fieldState.invalid &&
+                  "border-destructive focus-visible:ring-destructive",
+              )}
+            />
+          }
+        >
+          {field.value || placeholder}
+          <HugeiconsIcon
+            icon={ArrowDown01Icon}
+            className="ml-2 size-4 shrink-0 opacity-50"
+          />
+        </PopoverTrigger>
+        <PopoverContent
+          className="w-(--radix-popover-trigger-width) p-0"
+          align="start"
+        >
+          <Command>
+            <CommandInput placeholder={searchPlaceholder} />
+            <CommandList>
+              <CommandEmpty>{emptyText}</CommandEmpty>
+              <CommandGroup>
+                {options.map((opt) => (
+                  <CommandItem
+                    key={opt.key}
+                    value={opt.label}
+                    data-checked={opt.label === field.value}
+                    onSelect={() => onSelect(opt.label)}
+                  >
+                    {opt.label}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+      {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+    </Field>
+  );
+}
 
 export default function AddNewCompany() {
   const router = useRouter();
@@ -122,6 +204,7 @@ export default function AddNewCompany() {
       router.push("/dashboard/company");
     } catch (error) {
       console.error("Failed to create company", error);
+      toast.error("Failed to create company. Please try again.");
     }
   }
 
@@ -332,66 +415,23 @@ export default function AddNewCompany() {
                 name="location.country"
                 control={form.control}
                 render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldContent>
-                      <FieldLabel htmlFor={field.name}>Country</FieldLabel>
-                    </FieldContent>
-                    <Popover>
-                      <PopoverTrigger render={
-                        <Button
-                          type="button"
-                          id={field.name}
-                          variant="outline"
-                          role="combobox"
-                          className={cn(
-                            "w-full justify-between bg-transparent font-normal",
-                            !field.value && "text-muted-foreground",
-                            fieldState.invalid &&
-                              "border-destructive focus-visible:ring-destructive",
-                          )}
-                        />
-                      }>
-                          {field.value || "Select country"}
-                          <HugeiconsIcon
-                            icon={ArrowDown01Icon}
-                            className="ml-2 size-4 shrink-0 opacity-50"
-                          />
-                      </PopoverTrigger>
-                      <PopoverContent
-                        className="w-(--radix-popover-trigger-width) p-0"
-                        align="start"
-                      >
-                        <Command>
-                          <CommandInput placeholder="Search country..." />
-                          <CommandList>
-                            <CommandEmpty>No country found.</CommandEmpty>
-                            <CommandGroup>
-                              {countries.map((c) => (
-                                <CommandItem
-                                  key={c.isoCode}
-                                  value={c.name}
-                                  data-checked={c.name === field.value}
-                                  onSelect={() => {
-                                    field.onChange(c.name);
-                                    form.setValue("location.state", "");
-                                    form.setValue(
-                                      "location.localGovernment",
-                                      "",
-                                    );
-                                  }}
-                                >
-                                  {c.name}
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
+                  <LocationCombobox
+                    label="Country"
+                    field={field}
+                    fieldState={fieldState}
+                    options={countries.map((c) => ({
+                      key: c.isoCode,
+                      label: c.name,
+                    }))}
+                    placeholder="Select country"
+                    searchPlaceholder="Search country..."
+                    emptyText="No country found."
+                    onSelect={(val) => {
+                      field.onChange(val);
+                      form.setValue("location.state", "");
+                      form.setValue("location.localGovernment", "");
+                    }}
+                  />
                 )}
               />
 
@@ -399,69 +439,23 @@ export default function AddNewCompany() {
                 name="location.state"
                 control={form.control}
                 render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldContent>
-                      <FieldLabel htmlFor={field.name}>
-                        State / Province
-                      </FieldLabel>
-                    </FieldContent>
-                    <Popover>
-                      <PopoverTrigger render={
-                        <Button
-                          type="button"
-                          id={field.name}
-                          variant="outline"
-                          role="combobox"
-                          disabled={!countryCode}
-                          className={cn(
-                            "w-full justify-between bg-transparent font-normal",
-                            !field.value && "text-muted-foreground",
-                            fieldState.invalid &&
-                              "border-destructive focus-visible:ring-destructive",
-                          )}
-                        />
-                        }>
-                        
-                          {field.value || "Select state"}
-                          <HugeiconsIcon
-                            icon={ArrowDown01Icon}
-                            className="ml-2 size-4 shrink-0 opacity-50"
-                          />
-                      </PopoverTrigger>
-                      <PopoverContent
-                        className="w-(--radix-popover-trigger-width) p-0"
-                        align="start"
-                      >
-                        <Command>
-                          <CommandInput placeholder="Search state..." />
-                          <CommandList>
-                            <CommandEmpty>No state found.</CommandEmpty>
-                            <CommandGroup>
-                              {states.map((s) => (
-                                <CommandItem
-                                  key={s.isoCode}
-                                  value={s.name}
-                                  data-checked={s.name === field.value}
-                                  onSelect={() => {
-                                    field.onChange(s.name);
-                                    form.setValue(
-                                      "location.localGovernment",
-                                      "",
-                                    );
-                                  }}
-                                >
-                                  {s.name}
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
+                  <LocationCombobox
+                    label="State / Province"
+                    field={field}
+                    fieldState={fieldState}
+                    options={states.map((s) => ({
+                      key: s.isoCode,
+                      label: s.name,
+                    }))}
+                    placeholder="Select state"
+                    searchPlaceholder="Search state..."
+                    emptyText="No state found."
+                    disabled={!countryCode}
+                    onSelect={(val) => {
+                      field.onChange(val);
+                      form.setValue("location.localGovernment", "");
+                    }}
+                  />
                 )}
               />
 
@@ -469,66 +463,22 @@ export default function AddNewCompany() {
                 name="location.localGovernment"
                 control={form.control}
                 render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldContent>
-                      <FieldLabel htmlFor={field.name}>
-                        Local Government / City
-                      </FieldLabel>
-                    </FieldContent>
-                    <Popover>
-                      <PopoverTrigger
-                        render={
-                          <Button
-                            type="button"
-                            id={field.name}
-                            variant="outline"
-                            role="combobox"
-                            disabled={!stateCode}
-                            className={cn(
-                              "w-full justify-between bg-transparent font-normal",
-                              !field.value && "text-muted-foreground",
-                              fieldState.invalid &&
-                                "border-destructive focus-visible:ring-destructive",
-                            )}
-                          />
-                        }
-                      >
-                        {field.value || "Select city"}
-                        <HugeiconsIcon
-                          icon={ArrowDown01Icon}
-                          className="ml-2 size-4 shrink-0 opacity-50"
-                        />
-                      </PopoverTrigger>
-                      <PopoverContent
-                        className="w-(--radix-popover-trigger-width) p-0"
-                        align="start"
-                      >
-                        <Command>
-                          <CommandInput placeholder="Search city..." />
-                          <CommandList>
-                            <CommandEmpty>No city found.</CommandEmpty>
-                            <CommandGroup>
-                              {cities.map((c) => (
-                                <CommandItem
-                                  key={c.name}
-                                  value={c.name}
-                                  data-checked={c.name === field.value}
-                                  onSelect={() => {
-                                    field.onChange(c.name);
-                                  }}
-                                >
-                                  {c.name}
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
+                  <LocationCombobox
+                    label="Local Government / City"
+                    field={field}
+                    fieldState={fieldState}
+                    options={cities.map((c) => ({
+                      key: c.name,
+                      label: c.name,
+                    }))}
+                    placeholder="Select city"
+                    searchPlaceholder="Search city..."
+                    emptyText="No city found."
+                    disabled={!stateCode}
+                    onSelect={(val) => {
+                      field.onChange(val);
+                    }}
+                  />
                 )}
               />
 
@@ -582,7 +532,7 @@ export default function AddNewCompany() {
                     {...field}
                     id={field.name}
                     aria-invalid={fieldState.invalid}
-                    className="min-h-[120px]"
+                    className="min-h-30"
                     maxLength={MAX_DESCRIPTION_CHARS}
                     placeholder="Describe your internship program..."
                   />
